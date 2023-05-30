@@ -3,15 +3,6 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(SOURCE_DIR "Source Files")
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall --std=c++14")
-
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -34,5 +25,3 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(OmahaTest)
-
-#install(TARGETS OmahaTest LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

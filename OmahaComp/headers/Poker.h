@@ -1,9 +1,10 @@
-#pragma once
+#ifndef POKER_H
+#define POKER_H
 
 #include <iostream>
 
-#include "Hand.h"
-#include "Board.h"
+#include <Hand.h>
+#include <Board.h>
 
 class Poker {
 	Hand m_handA;
@@ -13,3 +14,5 @@ public:
 	Poker(std::string handASetup, std::string handBSetup, std::string boardSetup);
 	void findWinner();
 };
+
+#endif // POKER_H

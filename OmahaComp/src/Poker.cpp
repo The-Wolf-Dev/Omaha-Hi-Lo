@@ -1,7 +1,7 @@
 #include <string>
 #include <iomanip>
 
-#include "../Header Files/Poker.h"
+#include <Poker.h>
 
 Poker::Poker(std::string handASetup, std::string handBSetup, std::string boardSetup) 
 	: m_handA{ handASetup }, m_handB{ handBSetup }, m_board{ boardSetup } {

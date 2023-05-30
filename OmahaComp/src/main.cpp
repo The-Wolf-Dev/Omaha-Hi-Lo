@@ -1,14 +1,14 @@
 ﻿#include <fstream>
 #include <string>
 
-#include "../Header Files/Poker.h"
+#include <Poker.h>
 
-int main()
+int main(int argc, char* argv[])
 {	
 	std::ifstream inputFile("../../../../input.txt");
 
 	if(!inputFile) {
-		std::cerr << "Error: Couldn't open the file " << "\n";
+		std::cerr << "Error: Couldn't open the file\n";
 		return 1;
 	}
 

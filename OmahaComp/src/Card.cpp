@@ -1,4 +1,7 @@
-#include "../Header Files/Card.h"
+#include <Card.h>
+
+Card::Card() : m_rank{ '0' }, m_suit{ Suit::None }, m_weight{ 0 } {
+}
 
 Card::Card(char rank, char suit) : m_rank{ rank }, m_suit{ }, m_weight{ 0 } {
 	m_weight = parseWeight(rank);
@@ -92,16 +95,6 @@ bool operator==(const Card& lhs, const int& rhs)
 bool operator!=(const Card& lhs, const Card& rhs)
 {
 	return !(lhs == rhs);
-}
-
-Card& Card::operator+=(const int& rhs) {
-	this->m_weight += rhs;
-	return *this;
-}
-
-Card operator+(Card lhs, const int& rhs) {
-	lhs += rhs;
-	return lhs;
 }
 
 std::ostream& operator<<(std::ostream& os, const Card& card)
