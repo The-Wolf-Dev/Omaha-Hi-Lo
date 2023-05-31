@@ -10,9 +10,10 @@ class Combinations
 {
     std::vector<bool> m_mask;
     std::vector<T> m_source;
-    size_t m_elemCount, m_size, m_callsCount;
+    size_t m_size;
+    unsigned m_callsCount, m_elemCount;
 public:
-    Combinations(const std::vector<T>& source, size_t elemCount)
+    Combinations(const std::vector<T>& source, unsigned elemCount)
         : m_source{ source }, m_elemCount{ elemCount }, m_size{ source.size() },
         m_mask(source.size()), m_callsCount{} {
         std::fill(m_mask.begin(), m_mask.begin() + m_elemCount, true);
@@ -22,16 +23,16 @@ public:
 
 template<typename T>
 bool Combinations<T>::generateCombination(std::vector<T>& result) {
-    if (m_callsCount != 0) {
+    if (m_callsCount != 0U) {
         if (!std::prev_permutation(m_mask.begin(), m_mask.end())) {
-            m_callsCount = 0;
+            m_callsCount = 0U;
             return false;
         }
     }
 
     result.clear();
 
-    for (int i = 0; i < m_size; ++i) {
+    for (size_t i{ 0U }; i < m_size; ++i) {
         if (m_mask[i]) {
             result.push_back(m_source[i]);
             //std::cout << m_source[i] << " ";
