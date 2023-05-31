@@ -1,8 +1,5 @@
 #include <Card.h>
 
-Card::Card() : m_rank{ '0' }, m_suit{ Suit::None }, m_weight{ 0 } {
-}
-
 Card::Card(char rank, char suit) : m_rank{ rank }, m_suit{ }, m_weight{ 0 } {
 	m_weight = parseWeight(rank);
 	m_suit = parseSuit(suit);

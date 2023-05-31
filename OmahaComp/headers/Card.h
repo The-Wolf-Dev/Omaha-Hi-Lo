@@ -10,7 +10,6 @@ class Card {
 	Suit m_suit;
 	int m_weight;
 public:
-	Card();
 	Card(char m_rank, char m_suit);
 
 	char getRank() const;
