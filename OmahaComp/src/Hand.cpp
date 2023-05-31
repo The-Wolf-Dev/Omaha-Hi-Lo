@@ -3,6 +3,7 @@
 #include <functional>
 
 #include <Hand.h>
+#include <Combinations.h>
 
 Hand::Hand(std::string handSetup) 
 	: m_maxHighHandRank{ HighHand::None }, m_hasLowHand{ false } {
@@ -52,29 +53,21 @@ void Hand::findHiLoHand(const Board& board) {
 
 void Hand::findHighHand(const std::vector<Card>& boardCards) {
 	HighHand highHandRank = HighHand::None;
-	std::vector<Card> highHandCards(5);
+	std::vector<Card> highHandCards, twoCards, threeCards;
 
-	for (size_t card1 = 0; card1 < m_cards.size() - 1; card1++)
+	Combinations<Card> handComb(m_cards, (int)CardConst::PAIR_FROM_HAND), boardComb(boardCards, (int)CardConst::THREE_FROM_BOARD);
+
+	highHandCards.reserve((int)CardConst::HIGH_HAND_SIZE);
+	while (handComb.generateCombination(twoCards))
 	{
-		for (size_t card2 = card1 + 1; card2 < m_cards.size(); card2++)
-		{
-			for (size_t card3 = 0; card3 < boardCards.size() - 2; card3++)
-			{
-				for (size_t card4 = card3 + 1; card4 < boardCards.size() - 1; card4++)
-				{
-					for (size_t card5 = card4 + 1; card5 < boardCards.size(); card5++)
-					{
-						highHandCards[0] = m_cards[card1];
-						highHandCards[1] = m_cards[card2];
-						highHandCards[2] = boardCards[card3];
-						highHandCards[3] = boardCards[card4];
-						highHandCards[4] = boardCards[card5];
+		while (boardComb.generateCombination(threeCards)) {
+			highHandCards.insert(highHandCards.end(), twoCards.begin(), twoCards.end());
+			highHandCards.insert(highHandCards.end(), threeCards.begin(), threeCards.end());
 
-						highHandRank = checkHighHandCards(highHandCards);
-						checkHighHandRank(highHandRank, highHandCards);
-					}
-				}
-			}
+			highHandRank = checkHighHandCards(highHandCards);
+			checkHighHandRank(highHandRank, highHandCards);
+
+			highHandCards.clear();
 		}
 	}
 }
