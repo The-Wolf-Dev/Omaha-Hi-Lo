@@ -26,7 +26,11 @@ enum class CardConst {
 	HIGH_HAND_ACE = 14,
 	LOW_HAND_ACE = 1,
 	LOW_HAND_MAX_RANK = 8,
-	LOW_HAND_SIZE = 5
+	LOW_HAND_SIZE = 5,
+	HIGH_HAND_SIZE = 5,
+	HAND_SIZE = 4,
+	PAIR_FROM_HAND = 2,
+	THREE_FROM_BOARD = 3
 };
 
 #endif // ENUMS_H
