@@ -5,6 +5,18 @@
 #include <Hand.h>
 #include <Combinations.h>
 
+void removeDuplicates(std::vector<Card>& vec);
+bool changeAceWeight(std::vector<Card>& vec, std::vector<Card>::iterator& It);
+
+auto findHighAce(std::vector<Card>& vec) {
+	return std::find(vec.begin(), vec.end(), (int)CardConst::HIGH_HAND_ACE);
+}
+
+auto findNotSuitableCard(std::vector<Card>& vec) {
+	return std::find_if(vec.cbegin(), vec.cend(),
+		[](const Card& card) { return card > (int)CardConst::LOW_HAND_MAX_RANK; }); //std::greater<Card>((int)CardConst::LOW_HAND_MAX_RANK, std::placeholders::_1)
+}
+
 Hand::Hand(std::string handSetup) 
 	: m_maxHighHandRank{ HighHand::None }, m_hasLowHand{ false } {
 	for (size_t i{ 0U }, end{ handSetup.length() }; i < end; ++i)
@@ -73,31 +85,42 @@ void Hand::findHighHand(const std::vector<Card>& boardCards) {
 }
 
 void Hand::findLowHand(const std::vector<Card>& boardCards) {
-	m_lowHandCards.reserve(m_cards.size() + boardCards.size());
-	m_lowHandCards.insert(m_lowHandCards.end(), m_cards.begin(), m_cards.end());
+	m_lowHandCards.reserve(boardCards.size() + m_cards.size());
+	m_lowHandCards.assign(m_cards.begin(), m_cards.end());
 	m_lowHandCards.insert(m_lowHandCards.end(), boardCards.begin(), boardCards.end());
-	//m_lowHandCards.assign(m_cards.begin(), m_cards.end());
 	//std::copy(boardCards.begin(), boardCards.end(), std::back_inserter(m_lowHandCards));
 	
-	auto last = std::unique(m_lowHandCards.begin(), m_lowHandCards.end());
-	m_lowHandCards.erase(last, m_lowHandCards.end());
+	removeDuplicates(m_lowHandCards);
 	if (m_lowHandCards.size() < (int)CardConst::LOW_HAND_SIZE) return;
 
-	auto aceCard = std::find(m_lowHandCards.begin(), m_lowHandCards.end(), (int)CardConst::HIGH_HAND_ACE);
-	if (aceCard != m_lowHandCards.end())
-		(*aceCard).setWeight((int)CardConst::LOW_HAND_ACE);
+	auto aceCard = findHighAce(m_lowHandCards);
+	changeAceWeight(m_lowHandCards, aceCard);
 	std::sort(m_lowHandCards.begin(), m_lowHandCards.end());
 
 	//cutting off unnecessary elements (only 5 necessary elements remain)
 	m_lowHandCards.erase(m_lowHandCards.begin() + (int)CardConst::LOW_HAND_SIZE, m_lowHandCards.end());
 
-	auto notSuitableCard = std::find_if(m_lowHandCards.cbegin(), m_lowHandCards.cend(), 
-		[](const Card& card) { return card > (int)CardConst::LOW_HAND_MAX_RANK; });
-	if (notSuitableCard != m_lowHandCards.end()) return;
+	auto notSuitableCard = findNotSuitableCard(m_lowHandCards);
+	if (notSuitableCard != m_lowHandCards.cend()) return;
 
+	// reverse to correctly display the sequence of cards
 	std::reverse(m_lowHandCards.begin(), m_lowHandCards.end());
 
 	m_hasLowHand = true;
+}
+
+//  not a member function!!!
+void removeDuplicates(std::vector<Card>& vec) {
+	auto last = std::unique(vec.begin(), vec.end());
+	vec.erase(last, vec.end());
+}
+
+bool changeAceWeight(std::vector<Card>& vec, std::vector<Card>::iterator & It) {
+	if (It != vec.end()) {
+		(*It).setWeight((int)CardConst::LOW_HAND_ACE);
+		return true;
+	}
+	else return false;
 }
 
 void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
