@@ -19,7 +19,10 @@ enable_testing()
 
 target_link_libraries(
   OmahaTest
+  GTest::gtest
   GTest::gtest_main
+  GTest::gmock
+  GTest::gmock_main
   OmahaCompLib
 )
 
