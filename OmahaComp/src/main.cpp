@@ -5,11 +5,11 @@
 
 int main(int argc, char* argv[])
 {	
-	std::ifstream inputFile("../../../../input.txt");
+	std::ifstream inputFile(argv[1]);
 
 	if(!inputFile) {
 		std::cerr << "Error: Couldn't open the file\n";
-		return 1;
+		return 1; 
 	}
 
 	std::string inputLine{};

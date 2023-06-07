@@ -8,6 +8,8 @@ set(PROJECT_SOURCE_FILES ${SOURCE_DIR}/Card.cpp
 				${SOURCE_DIR}/Hand.cpp
 				${SOURCE_DIR}/Board.cpp
 				${SOURCE_DIR}/Poker.cpp
+				${SOURCE_DIR}/Checker.cpp
+				${SOURCE_DIR}/Tools.cpp
 				)
 
 add_library(OmahaCompLib STATIC ${PROJECT_SOURCE_FILES})

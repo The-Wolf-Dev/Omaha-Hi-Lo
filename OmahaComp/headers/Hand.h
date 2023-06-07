@@ -20,19 +20,11 @@ class Hand {
 
 	HighHand checkHighHandCards(std::vector<Card>&);
 	void checkHighHandRank(const HighHand&, const std::vector<Card>&);
-	bool isStraightFlush(const std::vector<Card>&) const;
-	bool is4OfAKind(const std::vector<Card>&) const;
-	bool isFullHouse(const std::vector<Card>&) const;
-	bool isFlush(const std::vector<Card>&) const;
-	bool isStraight(const std::vector<Card>&) const;
-	bool is3OfAKind(const std::vector<Card>&) const;
-	bool isTwoPair(const std::vector<Card>&) const;
-	bool isOnePair(const std::vector<Card>&) const;
-	void assignHighCard(const std::vector<Card>&);
+	void handleExceptionalStraightFlush(std::vector<Card>&);
 public:
 	Hand(std::string handSetup);
 	
-	std::string getHighHand() const;
+	HighHand getHighHandRank() const;
 	std::vector<Card> getHighHandCards() const;
 	bool hasLowHand() const;
 	std::vector<Card> getLowHandCards() const;

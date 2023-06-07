@@ -16,23 +16,13 @@ protected:
 	~CardTest();
 };
 
-CardTest::CardTest() : testCardQd{ 'Q', 'd' }, testCard5s{ '5', 's' } {
+CardTest::CardTest() : testCardQd{ 'Q', Suit::Diamonds }, testCard5s{ '5', Suit::Spaders } {
 
 }
 
 CardTest::~CardTest() {
 
 }
-
-class ParseWeightFixture: //public CardTest, // it will generate an error
-	public TestWithParam<std::tuple<char, int>>
-{
-};
-
-class ParseSuitFixture: //public CardTest, // it will generate an error
-	public TestWithParam<std::tuple<char, Suit>>
-{
-};
 
 // testCardQd object consrtructed in fixture with values of:
 // m_rank = 'Q', m_suit = Suit::Diamonds, m_weight = 12.
@@ -86,50 +76,6 @@ TEST_F(CardTest, SetWeightTest) {
 	EXPECT_THAT(testCardQd.getWeight(), Eq(14));
 }
 
-// This test uses tuple which contain rank as first value
-// and weight of corresponding rank as second value.
-// First value is put in the testCardQd.parseWeight(),
-// so it is expected to return the second value.
-TEST_P(ParseWeightFixture, ParseWeightTest) {
-	Card testCardQd {'2', 'c'};
-	auto param = GetParam();
-	EXPECT_THAT(testCardQd.parseWeight(std::get<0>(param)), Eq(std::get<1>(param)));
-}
-
-// Values for tuple
-INSTANTIATE_TEST_SUITE_P(CardTest, ParseWeightFixture, Values(
-	std::make_tuple('A', 14),
-	std::make_tuple('K', 13),
-	std::make_tuple('Q', 12),
-	std::make_tuple('J', 11),
-	std::make_tuple('T', 10),
-	std::make_tuple('9', 9),
-	std::make_tuple('8', 8),
-	std::make_tuple('7', 7),
-	std::make_tuple('6', 6),
-	std::make_tuple('5', 5),
-	std::make_tuple('4', 4),
-	std::make_tuple('3', 3),
-	std::make_tuple('2', 2)));
-
-// This test uses tuple which contain char suit as first value
-// and corresponding enum Suit value as second value.
-// First value is put in the testCardQd.parseSuit(),
-// so it is expected to return the second value.
-TEST_P(ParseSuitFixture, ParseSuitTest) {
-	Card testCardQd{ '2', 'c' };
-	auto param = GetParam();
-	EXPECT_THAT(testCardQd.parseSuit(std::get<0>(param)), Eq(std::get<1>(param)));
-}
-
-// Values for tuple
-INSTANTIATE_TEST_SUITE_P(CardTest, ParseSuitFixture, Values(
-	std::make_tuple('d', Suit::Diamonds),
-	std::make_tuple('s', Suit::Spaders),
-	std::make_tuple('c', Suit::Clubs),
-	std::make_tuple('h', Suit::Hearts),
-	std::make_tuple('a', Suit::None)));
-
 // operator< compares the weights of two cards.
 // testCardQd object consrtructed in fixture with value of m_rank = 'Q',
 // so m_weight = 12, so three cases of weight comparison will be considered:
@@ -137,9 +83,9 @@ INSTANTIATE_TEST_SUITE_P(CardTest, ParseSuitFixture, Values(
 // 2) 12 (Q) < 13 (K)
 // 3) 12 (Q) < 12 (Q)
 TEST_F(CardTest, OperatorLessThanTest) {
-	EXPECT_FALSE(testCardQd < Card('2', 's'));
-	EXPECT_TRUE(testCardQd < Card('K', 'd'));
-	EXPECT_FALSE(testCardQd < Card('Q', 'd'));
+	EXPECT_FALSE(testCardQd < Card('2', Suit::Spaders));
+	EXPECT_TRUE(testCardQd < Card('K', Suit::Diamonds));
+	EXPECT_FALSE(testCardQd < Card('Q', Suit::Diamonds));
 }
 
 // operator> compares the weights of two cards or card and integer.
@@ -152,9 +98,9 @@ TEST_F(CardTest, OperatorLessThanTest) {
 // 5) 12 (Q) > 20
 // 6) 12 (Q) > 12
 TEST_F(CardTest, OperatorGreaterThanTest) {
-	EXPECT_TRUE(testCardQd > Card('2', 's'));
-	EXPECT_FALSE(testCardQd > Card('K', 'd'));
-	EXPECT_FALSE(testCardQd > Card('Q', 'd'));
+	EXPECT_TRUE(testCardQd > Card('2', Suit::Spaders));
+	EXPECT_FALSE(testCardQd > Card('K', Suit::Diamonds));
+	EXPECT_FALSE(testCardQd > Card('Q', Suit::Diamonds));
 	
 	EXPECT_TRUE(testCardQd > 2);
 	EXPECT_FALSE(testCardQd > 20);
@@ -169,8 +115,8 @@ TEST_F(CardTest, OperatorGreaterThanTest) {
 // 3) 12 (Q) == 12
 // 4) 12 (Q) == 2
 TEST_F(CardTest, OperatorEqualTest) {
-	EXPECT_TRUE(testCardQd == Card('Q', 's'));
-	EXPECT_FALSE(testCardQd == Card('K', 'd'));
+	EXPECT_TRUE(testCardQd == Card('Q', Suit::Spaders));
+	EXPECT_FALSE(testCardQd == Card('K', Suit::Diamonds));
 
 	EXPECT_TRUE(testCardQd == 12);
 	EXPECT_FALSE(testCardQd == 20);
@@ -182,6 +128,6 @@ TEST_F(CardTest, OperatorEqualTest) {
 // 1) 12 (Q) != 12 (Q)
 // 2) 12 (Q) != 13 (K)
 TEST_F(CardTest, OperatorNotEqualTest) {
-	EXPECT_FALSE(testCardQd != Card('Q', 's'));
-	EXPECT_TRUE(testCardQd != Card('K', 'd'));
+	EXPECT_FALSE(testCardQd != Card('Q', Suit::Spaders));
+	EXPECT_TRUE(testCardQd != Card('K', Suit::Diamonds));
 }

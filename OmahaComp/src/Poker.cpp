@@ -2,6 +2,7 @@
 #include <iomanip>
 
 #include <Poker.h>
+#include <Tools.h>
 
 Poker::Poker(std::string handASetup, std::string handBSetup, std::string boardSetup) 
 	: m_handA{ handASetup }, m_handB{ handBSetup }, m_board{ boardSetup } {
@@ -10,7 +11,7 @@ Poker::Poker(std::string handASetup, std::string handBSetup, std::string boardSe
 void Poker::findWinner() {
 	m_handA.findHiLoHand(m_board);
 	m_handB.findHiLoHand(m_board);
-	std::cout << "HandA: Hi " << std::setw(15) << m_handA.getHighHand() << " ";
+	std::cout << "HandA: Hi " << std::setw(15) << highHandRankToString(m_handA.getHighHandRank()) << " ";
 	for (const auto& card : m_handA.getHighHandCards())
 	{
 		std::cout << card;
@@ -23,7 +24,7 @@ void Poker::findWinner() {
 		}
 	}
 	else std::cout << "No hand qualified for Low";
-	std::cout << "\nHandB: Hi " << std::setw(15) << m_handB.getHighHand() << " ";
+	std::cout << "\nHandB: Hi " << std::setw(15) << highHandRankToString(m_handB.getHighHandRank()) << " ";
 	for (const auto& card : m_handB.getHighHandCards())
 	{
 		std::cout << card;

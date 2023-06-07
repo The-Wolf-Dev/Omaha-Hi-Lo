@@ -1,48 +1,23 @@
 #include <iostream>
-#include <algorithm>
-#include <functional>
 
 #include <Hand.h>
 #include <Combinations.h>
-
-void removeDuplicates(std::vector<Card>& vec);
-bool changeAceWeight(std::vector<Card>& vec, std::vector<Card>::iterator& It);
-
-auto findHighAce(std::vector<Card>& vec) {
-	return std::find(vec.begin(), vec.end(), (int)CardConst::HIGH_HAND_ACE);
-}
-
-auto findNotSuitableCard(std::vector<Card>& vec) {
-	return std::find_if(vec.cbegin(), vec.cend(),
-		[](const Card& card) { return card > (int)CardConst::LOW_HAND_MAX_RANK; }); //std::greater<Card>((int)CardConst::LOW_HAND_MAX_RANK, std::placeholders::_1)
-}
+#include <Checker.h>
+#include <Tools.h>
 
 Hand::Hand(std::string handSetup) 
 	: m_maxHighHandRank{ HighHand::None }, m_hasLowHand{ false } {
 	for (size_t i{ 0U }, end{ handSetup.length() }; i < end; ++i)
 	{
 		if (i % 3 == 0) {
-			m_cards.emplace_back(handSetup[i], handSetup[i+1]);
+			m_cards.emplace_back(handSetup[i], parseSuit(handSetup[i + 1U]));
 		}
 	}
 	std::sort(m_cards.begin(), m_cards.end(), std::greater<Card>());
 }
 
-std::string Hand::getHighHand() const {
-	switch (m_maxHighHandRank)
-	{
-	case HighHand::StraightFlush: return "Straight Flush";
-	case HighHand::FourOfAKind: return "4-of-a-Kind";
-	case HighHand::FullHouse: return "Full House";
-	case HighHand::Flush: return "Flush";
-	case HighHand::Straight: return "Straight";
-	case HighHand::ThreeOfAKind: return "3-of-a-Kind";
-	case HighHand::TwoPair: return "Two Pair";
-	case HighHand::OnePair: return "One Pair";
-	case HighHand::HighCard: return "High Card";
-	default:
-		return "Unknown HighHand";
-	}
+HighHand Hand::getHighHandRank() const {
+	return m_maxHighHandRank;
 }
 
 std::vector<Card> Hand::getHighHandCards() const {
@@ -88,13 +63,12 @@ void Hand::findLowHand(const std::vector<Card>& boardCards) {
 	m_lowHandCards.reserve(boardCards.size() + m_cards.size());
 	m_lowHandCards.assign(m_cards.begin(), m_cards.end());
 	m_lowHandCards.insert(m_lowHandCards.end(), boardCards.begin(), boardCards.end());
-	//std::copy(boardCards.begin(), boardCards.end(), std::back_inserter(m_lowHandCards));
-	
+
 	removeDuplicates(m_lowHandCards);
 	if (m_lowHandCards.size() < (int)CardConst::LOW_HAND_SIZE) return;
 
 	auto aceCard = findHighAce(m_lowHandCards);
-	changeAceWeight(m_lowHandCards, aceCard);
+	if(aceCard != m_lowHandCards.end()) changeAceWeight(aceCard);
 	std::sort(m_lowHandCards.begin(), m_lowHandCards.end());
 
 	//cutting off unnecessary elements (only 5 necessary elements remain)
@@ -109,51 +83,50 @@ void Hand::findLowHand(const std::vector<Card>& boardCards) {
 	m_hasLowHand = true;
 }
 
-//  not a member function!!!
-void removeDuplicates(std::vector<Card>& vec) {
-	auto last = std::unique(vec.begin(), vec.end());
-	vec.erase(last, vec.end());
-}
-
-bool changeAceWeight(std::vector<Card>& vec, std::vector<Card>::iterator & It) {
-	if (It != vec.end()) {
-		(*It).setWeight((int)CardConst::LOW_HAND_ACE);
-		return true;
-	}
-	else return false;
-}
-
 void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
 	if (m_maxHighHandRank < highHandRank) {
 		m_maxHighHandRank = highHandRank;
+		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
+	}
+	else if (m_maxHighHandRank == highHandRank && m_maxHighHandCards < highHandCards) {
 		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
 	}
 }
 
 HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	std::sort(highHandCards.begin(), highHandCards.end(), std::greater<Card>());
-	if (isStraightFlush(highHandCards)) {
+	Checker checker;
+	StraightFlushChecker sfchecker;
+
+	for (const auto& c : highHandCards) {
+		checker.update(c);
+		sfchecker.update(c);
+	}
+
+	if (sfchecker.isStraightFlush()) {
+		handleExceptionalStraightFlush(highHandCards);
 		return HighHand::StraightFlush;
 	} 
-	else if(is4OfAKind(highHandCards)) {
+	else if (checker.is4OfAKind()) {
 		return HighHand::FourOfAKind;
 	}
-	else if (isFullHouse(highHandCards)) {
+	else if (checker.isFullHouse()) {
 		return HighHand::FullHouse;
 	}
-	else if (isFlush(highHandCards)) {
+	else if (sfchecker.isFlush()) {
 		return HighHand::Flush;
 	}
-	else if (isStraight(highHandCards)) {
+	else if (sfchecker.isStraight()) {
+		handleExceptionalStraightFlush(highHandCards);
 		return HighHand::Straight;
 	}
-	else if (is3OfAKind(highHandCards)) {
+	else if (checker.is3OfAKind()) {
 		return HighHand::ThreeOfAKind;
 	}
-	else if (isTwoPair(highHandCards)) {
+	else if (checker.isTwoPair()) {
 		return HighHand::TwoPair;
 	}
-	else if (isOnePair(highHandCards)) {
+	else if (checker.isOnePair()) {
 		return HighHand::OnePair;
 	}
 	else {
@@ -161,89 +134,9 @@ HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	}
 }
 
-bool Hand::isStraightFlush(const std::vector<Card>& highHandCards) const {
-	if (isStraight(highHandCards) && isFlush(highHandCards)) return true;
-	else return false;
-}
-
-bool Hand::is4OfAKind(const std::vector<Card>& highHandCards) const {
-	//Check if any 4 sequential cards of the same rank
-	for (size_t i{ 0U }, end{ highHandCards.size() - 3U }; i < end; ++i)
-	{
-		if (highHandCards[i] == highHandCards[i + 1U] 
-			&& highHandCards[i + 1U] == highHandCards[i + 2U]
-			&& highHandCards[i + 2U] == highHandCards[i + 3U]) {
-			return true;
-		}
+void Hand::handleExceptionalStraightFlush(std::vector<Card>& highHandCards) {
+	if (!highHandCards.empty()
+		&& highHandCards[0].getRank() == 'A' && highHandCards[1].getRank() == '5') {
+		highHandCards[0].setWeight(1);
 	}
-	return false;
-}
-
-bool Hand::isFullHouse(const std::vector<Card>& highHandCards) const {
-	// if first 3 elements are equal, then if last 2 elemets are equal, it's Full House
-	if (highHandCards[0] == highHandCards[1]
-		&& highHandCards[1] == highHandCards[2]) {
-		if (highHandCards[3] == highHandCards[4]) {
-			return true;
-		}
-	}
-	// if first 2 elements are equal, then if last 3 elemets are equal, it's Full House
-	else if (highHandCards[0] == highHandCards[1]) {
-		if (highHandCards[2] == highHandCards[3]
-			&& highHandCards[3] == highHandCards[4]) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Hand::isFlush(const std::vector<Card>& highHandCards) const {
-	//if suits of two cards are not equal, then it's not Flush
-	for (size_t i{ 0 }, end{ highHandCards.size() - 1U }; i < end; ++i) {
-		if (highHandCards[i].getSuit() != highHandCards[i + 1U].getSuit()) return false;
-	}
-	return true;
-}
-
-bool Hand::isStraight(const std::vector<Card>& highHandCards) const {
-	//if weight of one element isn't equal to weight of next element then it's not Straight
-	//exception: A5432 because A has a weight equal to 14
-	for (size_t i{ 0U }, end{ highHandCards.size() - 1U }; i < end; ++i)
-	{
-		if (i == 0U && highHandCards[i].getRank() == 'A' && highHandCards[i + 1U].getRank() == '5') continue;
-		if (highHandCards[i].getWeight() != highHandCards[i + 1U].getWeight() + 1U) return false;
-	}
-	return true;
-}
-
-bool Hand::is3OfAKind(const std::vector<Card>& highHandCards) const {
-	//Check if any 3 sequential cards of the same suit
-	for (size_t i{ 0 }, end{ highHandCards.size() - 2 }; i < end; ++i)
-	{
-		if (highHandCards[i] == highHandCards[i + 1U]
-			&& highHandCards[i + 1U] == highHandCards[i + 2U]) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Hand::isTwoPair(const std::vector<Card>& highHandCards) const {
-	for (size_t i{ 0U }, end{ highHandCards.size() - 3U }; i < end; ++i)
-	{
-		for (size_t j{ i + 2 }, end2{ highHandCards.size() - 1U }; j < end2; ++j)
-		{
-			if (highHandCards[i] == highHandCards[i + 1U]
-				&& highHandCards[j] == highHandCards[j + 1U]) return true;
-		}
-	}
-	return false;
-}
-
-bool Hand::isOnePair(const std::vector<Card>& highHandCards) const {
-	for (size_t i{ 0U }, end{ highHandCards.size() - 1U }; i < end; ++i)
-	{
-		if (highHandCards[i] == highHandCards[i + 1U]) return true;
-	}
-	return false;
 }

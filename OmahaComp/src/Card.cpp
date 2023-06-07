@@ -1,8 +1,8 @@
 #include <Card.h>
+#include <Tools.h>
 
-Card::Card(char rank, char suit) : m_rank{ rank }, m_suit{ }, m_weight{ 0 } {
+Card::Card(char rank, Suit suit) : m_rank{ rank }, m_suit{ suit }, m_weight{ 0 } {
 	m_weight = parseWeight(rank);
-	m_suit = parseSuit(suit);
 }
 
 char Card::getRank() const {
@@ -19,49 +19,6 @@ int Card::getWeight() const {
 
 void Card::setWeight(int weight) {
 	m_weight = weight;
-}
-
-int Card::parseWeight(const char rank) {
-	switch (rank)
-	{
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-		return rank - '0';
-	case 'T':
-		return 10;
-	case 'J':
-		return 11;
-	case 'Q':
-		return 12;
-	case 'K':
-		return 13;
-	case 'A':
-		return 14;
-	default:
-		return 0;
-	}
-}
-
-Suit Card::parseSuit(const char suit) {
-	switch (suit)
-	{
-	case 'd':
-		return Suit::Diamonds;
-	case 'c':
-		return Suit::Clubs;
-	case 'h':
-		return Suit::Hearts;
-	case 's':
-		return Suit::Spaders;
-	default:
-		return Suit::None;
-	}
 }
 
 bool operator<(const Card& lhs, const Card& rhs)
@@ -92,6 +49,14 @@ bool operator==(const Card& lhs, const int& rhs)
 bool operator!=(const Card& lhs, const Card& rhs)
 {
 	return !(lhs == rhs);
+}
+
+int operator+(const Card& lhs, const Card& rhs) {
+	return lhs.getWeight() + rhs.getWeight();
+}
+
+int operator+(const int lhs, const Card& rhs) {
+	return lhs + rhs.getWeight();
 }
 
 std::ostream& operator<<(std::ostream& os, const Card& card)

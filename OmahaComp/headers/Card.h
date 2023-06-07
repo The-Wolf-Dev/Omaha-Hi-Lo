@@ -10,14 +10,12 @@ class Card {
 	Suit m_suit;
 	int m_weight;
 public:
-	Card(char m_rank, char m_suit);
+	Card(char m_rank, Suit m_suit);
 
 	char getRank() const;
 	Suit getSuit() const;
 	int getWeight() const;
 	void setWeight(int);
-	int parseWeight(const char);
-	Suit parseSuit(const char);
 
 	friend bool operator<(const Card&, const Card&);
 	friend bool operator>(const Card&, const Card&);
@@ -25,6 +23,8 @@ public:
 	friend bool operator==(const Card&, const Card&);
 	friend bool operator==(const Card&, const int&);
 	friend bool operator!=(const Card&, const Card&);
+	friend int operator+(const Card&, const Card&);
+	friend int operator+(const int, const Card&);
 	friend std::ostream& operator<<(std::ostream&, const Card&);
 };
 

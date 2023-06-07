@@ -13,18 +13,23 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Add source to this project's executable.
-add_executable (OmahaTest ${SOURCE_DIR}/OmahaTest.cpp ${SOURCE_DIR}/CardTest.cpp)
+add_executable (OmahaTest ${SOURCE_DIR}/OmahaTest.cpp)
+add_executable (CardTest ${SOURCE_DIR}/CardTest.cpp)
+add_executable (CheckerTest ${SOURCE_DIR}/CheckerTest.cpp)
+add_executable (ToolsTest ${SOURCE_DIR}/ToolsTest.cpp)
 
 enable_testing()
 
+foreach(testexe OmahaTest CardTest CheckerTest ToolsTest)
 target_link_libraries(
-  OmahaTest
+  ${testexe}
   GTest::gtest
   GTest::gtest_main
   GTest::gmock
   GTest::gmock_main
   OmahaCompLib
 )
+endforeach()
 
 include(GoogleTest)
 gtest_discover_tests(OmahaTest)
