@@ -34,76 +34,54 @@ std::vector<Card> Hand::getLowHandCards() const {
 
 void Hand::findHiLoHand(const Board& board) {
 	const auto boardCards = board.getCards();
-	findHighHand(boardCards);
-	findLowHand(boardCards);
-}
-
-void Hand::findHighHand(const std::vector<Card>& boardCards) {
 	HighHand highHandRank = HighHand::None;
-	std::vector<Card> highHandCards, twoCards, threeCards;
+	std::vector<Card> cards, twoCards, threeCards;
 
 	Combinations<Card> handComb(m_cards, (int)CardConst::PAIR_FROM_HAND), boardComb(boardCards, (int)CardConst::THREE_FROM_BOARD);
 
-	highHandCards.reserve((int)CardConst::HIGH_HAND_SIZE);
+	cards.reserve((int)CardConst::HIGH_HAND_SIZE);
 	while (handComb.generateCombination(twoCards))
 	{
 		while (boardComb.generateCombination(threeCards)) {
-			highHandCards.insert(highHandCards.end(), twoCards.begin(), twoCards.end());
-			highHandCards.insert(highHandCards.end(), threeCards.begin(), threeCards.end());
+			cards.insert(cards.end(), twoCards.begin(), twoCards.end());
+			cards.insert(cards.end(), threeCards.begin(), threeCards.end());
 
-			highHandRank = checkHighHandCards(highHandCards);
-			checkHighHandRank(highHandRank, highHandCards);
+			highHandRank = checkHighHandCards(cards);
+			checkHighHandRank(highHandRank, cards);
+			checkLowHandCards(cards);
 
-			highHandCards.clear();
+			cards.clear();
 		}
 	}
 }
 
-void Hand::findLowHand(const std::vector<Card>& boardCards) {
-	m_lowHandCards.reserve(boardCards.size() + m_cards.size());
-	m_lowHandCards.assign(m_cards.begin(), m_cards.end());
-	m_lowHandCards.insert(m_lowHandCards.end(), boardCards.begin(), boardCards.end());
+void Hand::checkLowHandCards(std::vector<Card>& cards) {
+	int uniqueCardsCount = std::unique(cards.begin(), cards.end()) - cards.begin();
+	if (uniqueCardsCount < 5) return;
 
-	removeDuplicates(m_lowHandCards);
-	if (m_lowHandCards.size() < (int)CardConst::LOW_HAND_SIZE) return;
+	auto aceCard = findHighAce(cards);
+	if (aceCard != cards.end()) changeAceWeight(aceCard);
+	std::sort(cards.begin(), cards.end());
 
-	auto aceCard = findHighAce(m_lowHandCards);
-	if(aceCard != m_lowHandCards.end()) changeAceWeight(aceCard);
-	std::sort(m_lowHandCards.begin(), m_lowHandCards.end());
+	auto notSuitableCard = findNotSuitableCard(cards);
+	if (notSuitableCard != cards.cend()) return;
 
-	//cutting off unnecessary elements (only 5 necessary elements remain)
-	m_lowHandCards.erase(m_lowHandCards.begin() + (int)CardConst::LOW_HAND_SIZE, m_lowHandCards.end());
-
-	auto notSuitableCard = findNotSuitableCard(m_lowHandCards);
-	if (notSuitableCard != m_lowHandCards.cend()) return;
-
-	// reverse to correctly display the sequence of cards
-	std::reverse(m_lowHandCards.begin(), m_lowHandCards.end());
-
-	m_hasLowHand = true;
-}
-
-void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
-	if (m_maxHighHandRank < highHandRank) {
-		m_maxHighHandRank = highHandRank;
-		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
-	}
-	else if (m_maxHighHandRank == highHandRank && m_maxHighHandCards < highHandCards) {
-		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
+	if (cards < m_lowHandCards || m_lowHandCards.empty()) {
+		m_lowHandCards.assign(cards.begin(), cards.end());
+		std::reverse(m_lowHandCards.begin(), m_lowHandCards.end());
+		m_hasLowHand = true;
 	}
 }
 
 HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	std::sort(highHandCards.begin(), highHandCards.end(), std::greater<Card>());
 	Checker checker;
-	StraightFlushChecker sfchecker;
 
 	for (const auto& c : highHandCards) {
 		checker.update(c);
-		sfchecker.update(c);
 	}
 
-	if (sfchecker.isStraightFlush()) {
+	if (checker.isStraightFlush()) {
 		handleExceptionalStraightFlush(highHandCards);
 		return HighHand::StraightFlush;
 	} 
@@ -113,10 +91,10 @@ HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	else if (checker.isFullHouse()) {
 		return HighHand::FullHouse;
 	}
-	else if (sfchecker.isFlush()) {
+	else if (checker.isFlush()) {
 		return HighHand::Flush;
 	}
-	else if (sfchecker.isStraight()) {
+	else if (checker.isStraight()) {
 		handleExceptionalStraightFlush(highHandCards);
 		return HighHand::Straight;
 	}
@@ -134,9 +112,12 @@ HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	}
 }
 
-void Hand::handleExceptionalStraightFlush(std::vector<Card>& highHandCards) {
-	if (!highHandCards.empty()
-		&& highHandCards[0].getRank() == 'A' && highHandCards[1].getRank() == '5') {
-		highHandCards[0].setWeight(1);
+void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
+	if (m_maxHighHandRank < highHandRank) {
+		m_maxHighHandRank = highHandRank;
+		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
+	}
+	else if (m_maxHighHandRank == highHandRank && m_maxHighHandCards < highHandCards) {
+		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
 	}
 }

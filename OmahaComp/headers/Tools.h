@@ -14,5 +14,6 @@ void changeAceWeight(std::vector<Card>::iterator& It);
 bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs);
 std::vector<Card>::iterator findHighAce(std::vector<Card>& vec);
 std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec);
+void handleExceptionalStraightFlush(std::vector<Card>&);
 
 #endif // TOOLS_H

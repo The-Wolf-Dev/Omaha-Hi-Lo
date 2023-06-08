@@ -89,3 +89,10 @@ std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec) {
 	return std::find_if(vec.cbegin(), vec.cend(),
 		[](const Card& card) { return card > (int)CardConst::LOW_HAND_MAX_RANK; }); //std::greater<Card>((int)CardConst::LOW_HAND_MAX_RANK, std::placeholders::_1)
 }
+
+void handleExceptionalStraightFlush(std::vector<Card>& highHandCards) {
+	if (!highHandCards.empty()
+		&& highHandCards[0].getRank() == 'A' && highHandCards[1].getRank() == '5') {
+		highHandCards[0].setWeight(1);
+	}
+}
