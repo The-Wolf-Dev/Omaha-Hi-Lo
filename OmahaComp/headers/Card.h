@@ -6,25 +6,23 @@
 #include <Enums.h>
 
 class Card {
-	char m_rank;
+	Rank m_rank;
 	Suit m_suit;
-	int m_weight;
 public:
-	Card(char m_rank, Suit m_suit);
+	Card(Rank m_rank, Suit m_suit);
 
-	char getRank() const;
+	Rank getRank() const;
 	Suit getSuit() const;
-	int getWeight() const;
-	void setWeight(int);
+	void makeLowAce();
 
 	friend bool operator<(const Card&, const Card&);
 	friend bool operator>(const Card&, const Card&);
-	friend bool operator>(const Card&, const int&);
+	friend bool operator>(const Card&, const Rank&);
 	friend bool operator==(const Card&, const Card&);
-	friend bool operator==(const Card&, const int&);
+	friend bool operator==(const Card&, const Rank&);
 	friend bool operator!=(const Card&, const Card&);
-	friend int operator+(const Card&, const Card&);
-	friend int operator+(const int, const Card&);
+	friend int operator+(const Card&, const Card&);	// for std::accumulate
+	friend int operator+(const int, const Card&);	// for std::accumulate
 	friend std::ostream& operator<<(std::ostream&, const Card&);
 };
 

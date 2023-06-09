@@ -7,13 +7,18 @@
 #include <Card.h>
 
 Suit parseSuit(const char suit);
+Rank parseRank(const char rank);
+
 std::string highHandRankToString(const HighHand suit);
-int parseWeight(const char rank);
+char cardRankToChar(const Rank rank);
+
 void removeDuplicates(std::vector<Card>& vec);
-void changeAceWeight(std::vector<Card>::iterator& It);
-bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs);
 std::vector<Card>::iterator findHighAce(std::vector<Card>& vec);
+void makeLowAce(std::vector<Card>::iterator& It);
 std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec);
+
+bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs);
+
 void handleExceptionalStraightFlush(std::vector<Card>&);
 
 #endif // TOOLS_H

@@ -6,7 +6,7 @@
 using namespace testing;
 
 class ParseWeightFixture : //public CardTest, // it will generate an error
-	public TestWithParam<std::tuple<char, int>>
+	public TestWithParam<std::tuple<char, Rank>>
 {
 };
 
@@ -19,26 +19,26 @@ class ParseSuitFixture : //public CardTest, // it will generate an error
 // and weight of corresponding rank as second value.
 // First value is put in the testCardQd.parseWeight(),
 // so it is expected to return the second value.
-TEST_P(ParseWeightFixture, ParseWeightTest) {
+TEST_P(ParseWeightFixture, ParseRankTest) {
 	auto param = GetParam();
-	EXPECT_THAT(parseWeight(std::get<0>(param)), Eq(std::get<1>(param)));
+	EXPECT_THAT(parseRank(std::get<0>(param)), Eq(std::get<1>(param)));
 }
 
 // Values for tuple
 INSTANTIATE_TEST_SUITE_P(CardTest, ParseWeightFixture, Values(
-	std::make_tuple('A', 14),
-	std::make_tuple('K', 13),
-	std::make_tuple('Q', 12),
-	std::make_tuple('J', 11),
-	std::make_tuple('T', 10),
-	std::make_tuple('9', 9),
-	std::make_tuple('8', 8),
-	std::make_tuple('7', 7),
-	std::make_tuple('6', 6),
-	std::make_tuple('5', 5),
-	std::make_tuple('4', 4),
-	std::make_tuple('3', 3),
-	std::make_tuple('2', 2)));
+	std::make_tuple('A', Rank::A),
+	std::make_tuple('K', Rank::K),
+	std::make_tuple('Q', Rank::Q),
+	std::make_tuple('J', Rank::J),
+	std::make_tuple('T', Rank::T),
+	std::make_tuple('9', Rank::_9),
+	std::make_tuple('8', Rank::_8),
+	std::make_tuple('7', Rank::_7),
+	std::make_tuple('6', Rank::_6),
+	std::make_tuple('5', Rank::_5),
+	std::make_tuple('4', Rank::_4),
+	std::make_tuple('3', Rank::_3),
+	std::make_tuple('2', Rank::_2)));
 
 // This test uses tuple which contain char suit as first value
 // and corresponding enum Suit value as second value.

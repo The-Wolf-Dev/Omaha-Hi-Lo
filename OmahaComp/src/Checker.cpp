@@ -3,14 +3,12 @@
 #include <Card.h>
 #include <Checker.h>
 
-namespace compr {
-	bool fourOfKind(Checker::c2s_t const& p) { return p.second == 4; }
-	bool triplet(Checker::c2s_t const& p) { return p.second == 3; }
-	bool pair(Checker::c2s_t const& p) { return p.second == 2; }
-}
+bool compr::fourOfKind(Checker::c2s_t const& p) { return p.second == 4; }
+bool compr::triplet(Checker::c2s_t const& p) { return p.second == 3; }
+bool compr::pair(Checker::c2s_t const& p) { return p.second == 2; }
 
 void Checker::StraightFlushChecker::update(const Card& card) {
-	if (card.getRank() == 'A') cards[Card('L', card.getSuit())];
+	if (card.getRank() == Rank::A) cards[Card(Rank::LA, card.getSuit())];
 	cards[card]++;
 
 	suits.insert(card.getSuit());
@@ -22,7 +20,7 @@ bool Checker::StraightFlushChecker::isStraight() const {
 	auto cur{ cards.cbegin() }, next{ cur };
 	++next;
 
-	if (cur->first.getRank() == 'L' && next->first.getRank() != '2') {
+	if (cur->first.getRank() == Rank::LA && next->first.getRank() != Rank::_2) {
 		cur = next;
 		++next;
 	}
@@ -30,7 +28,7 @@ bool Checker::StraightFlushChecker::isStraight() const {
 	size_t i = 0;
 	for (auto e = cards.cend(); next != e && i < 4; ++cur, ++next, ++i) {
 		Card ccard = cur->first, ncard = next->first;
-		if (ccard.getWeight() != ncard.getWeight() - 1)
+		if ((int)ccard.getRank() != (int)ncard.getRank() - 1)
 			return false;
 	}
 	

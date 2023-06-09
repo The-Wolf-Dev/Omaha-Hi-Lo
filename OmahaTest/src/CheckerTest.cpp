@@ -19,7 +19,7 @@ TEST_F(CheckerTest, NewStraightFlushCheckerIsInvalid) {
 }
 
 TEST_F(CheckerTest, InvalidStraightWithInvalidCards) {
-	std::vector<Card> cards{Card('5', Suit::Spaders), Card('A', Suit::Diamonds), Card('J', Suit::Spaders), Card('4', Suit::Spaders), Card('5', Suit::Diamonds) };
+	std::vector<Card> cards{Card(Rank::_5, Suit::Spaders), Card(Rank::A, Suit::Diamonds), Card(Rank::J, Suit::Spaders), Card(Rank::_4, Suit::Spaders), Card(Rank::_5, Suit::Diamonds) };
 	
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -28,7 +28,7 @@ TEST_F(CheckerTest, InvalidStraightWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, InvalidStraightWithValidCards) {
-	std::vector<Card> cards{ Card('7', Suit::Spaders), Card('6', Suit::Clubs), Card('5', Suit::Spaders), Card('4', Suit::Diamonds), Card('3', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::_7, Suit::Spaders), Card(Rank::_6, Suit::Clubs), Card(Rank::_5, Suit::Spaders), Card(Rank::_4, Suit::Diamonds), Card(Rank::_3, Suit::Spaders) };
 	
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -38,7 +38,7 @@ TEST_F(CheckerTest, InvalidStraightWithValidCards) {
 
 
 TEST_F(CheckerTest, ValidStraightWithLowAce) {
-	std::vector<Card> cards{ Card('A', Suit::Spaders), Card('5', Suit::Spaders), Card('4', Suit::Spaders), Card('3', Suit::Spaders), Card('2', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Spaders), Card(Rank::_5, Suit::Spaders), Card(Rank::_4, Suit::Spaders), Card(Rank::_3, Suit::Spaders), Card(Rank::_2, Suit::Spaders) };
 	
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -47,7 +47,7 @@ TEST_F(CheckerTest, ValidStraightWithLowAce) {
 }
 
 TEST_F(CheckerTest, ValidStraightWithHighAce) {
-	std::vector<Card> cards{ Card('A', Suit::Spaders), Card('K', Suit::Spaders), Card('Q', Suit::Spaders), Card('J', Suit::Spaders), Card('T', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Spaders), Card(Rank::K, Suit::Spaders), Card(Rank::Q, Suit::Spaders), Card(Rank::J, Suit::Spaders), Card(Rank::T, Suit::Spaders) };
 	
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -56,7 +56,7 @@ TEST_F(CheckerTest, ValidStraightWithHighAce) {
 }
 
 TEST_F(CheckerTest, ValidFlushWithValidCards) {
-	std::vector<Card> cards{ Card('A', Suit::Spaders), Card('K', Suit::Spaders), Card('Q', Suit::Spaders), Card('J', Suit::Spaders), Card('T', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Spaders), Card(Rank::K, Suit::Spaders), Card(Rank::Q, Suit::Spaders), Card(Rank::J, Suit::Spaders), Card(Rank::T, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -65,7 +65,7 @@ TEST_F(CheckerTest, ValidFlushWithValidCards) {
 }
 
 TEST_F(CheckerTest, ValidFlushWithInvalidCards) {
-	std::vector<Card> cards{ Card('A', Suit::Spaders), Card('K', Suit::Diamonds), Card('Q', Suit::Spaders), Card('J', Suit::Clubs), Card('T', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Spaders), Card(Rank::K, Suit::Diamonds), Card(Rank::Q, Suit::Spaders), Card(Rank::J, Suit::Clubs), Card(Rank::T, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -74,7 +74,7 @@ TEST_F(CheckerTest, ValidFlushWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, ValidStraightFlushWithValidCards) {
-	std::vector<Card> cards{ Card('A', Suit::Diamonds), Card('K', Suit::Diamonds), Card('Q', Suit::Diamonds), Card('J', Suit::Diamonds), Card('T', Suit::Diamonds) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Diamonds), Card(Rank::K, Suit::Diamonds), Card(Rank::Q, Suit::Diamonds), Card(Rank::J, Suit::Diamonds), Card(Rank::T, Suit::Diamonds) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -83,7 +83,7 @@ TEST_F(CheckerTest, ValidStraightFlushWithValidCards) {
 }
 
 TEST_F(CheckerTest, ValidStraightFlushWithInvalidCards) {
-	std::vector<Card> cards{ Card('3', Suit::Spaders), Card('K', Suit::Diamonds), Card('Q', Suit::Spaders), Card('J', Suit::Clubs), Card('T', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::_3, Suit::Spaders), Card(Rank::K, Suit::Diamonds), Card(Rank::Q, Suit::Spaders), Card(Rank::J, Suit::Clubs), Card(Rank::T, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -100,7 +100,7 @@ TEST_F(CheckerTest, NewCheckerIsInvalid) {
 }
 
 TEST_F(CheckerTest, Valid4OfAKindWithValidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('K', Suit::Diamonds), Card('K', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::K, Suit::Diamonds), Card(Rank::K, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -109,7 +109,7 @@ TEST_F(CheckerTest, Valid4OfAKindWithValidCards) {
 }
 
 TEST_F(CheckerTest, Invalid4OfAKindWithInvalidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('2', Suit::Diamonds), Card('K', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_2, Suit::Diamonds), Card(Rank::K, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -118,7 +118,7 @@ TEST_F(CheckerTest, Invalid4OfAKindWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, ValidFullHouseWithValidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('K', Suit::Diamonds), Card('K', Suit::Clubs), Card('A', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::K, Suit::Diamonds), Card(Rank::K, Suit::Clubs), Card(Rank::A, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -127,7 +127,7 @@ TEST_F(CheckerTest, ValidFullHouseWithValidCards) {
 }
 
 TEST_F(CheckerTest, InvalidFullHouseWithInvalidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('2', Suit::Diamonds), Card('K', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_2, Suit::Diamonds), Card(Rank::K, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -136,7 +136,7 @@ TEST_F(CheckerTest, InvalidFullHouseWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, Valid3OfAKindWithValidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('5', Suit::Spaders), Card('K', Suit::Clubs), Card('A', Suit::Hearts), Card('K', Suit::Diamonds) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_5, Suit::Spaders), Card(Rank::K, Suit::Clubs), Card(Rank::A, Suit::Hearts), Card(Rank::K, Suit::Diamonds) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -145,7 +145,7 @@ TEST_F(CheckerTest, Valid3OfAKindWithValidCards) {
 }
 
 TEST_F(CheckerTest, Invalid3OfAKindWithInvalidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('2', Suit::Diamonds), Card('3', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_2, Suit::Diamonds), Card(Rank::_3, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -154,7 +154,7 @@ TEST_F(CheckerTest, Invalid3OfAKindWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, ValidTwoPairWithValidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('5', Suit::Spaders), Card('A', Suit::Clubs), Card('A', Suit::Hearts), Card('K', Suit::Diamonds) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_5, Suit::Spaders), Card(Rank::A, Suit::Clubs), Card(Rank::A, Suit::Hearts), Card(Rank::K, Suit::Diamonds) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -163,7 +163,7 @@ TEST_F(CheckerTest, ValidTwoPairWithValidCards) {
 }
 
 TEST_F(CheckerTest, InvalidTwoPairWithInvalidCards) {
-	std::vector<Card> cards{ Card('K', Suit::Spaders), Card('2', Suit::Diamonds), Card('3', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::K, Suit::Spaders), Card(Rank::_2, Suit::Diamonds), Card(Rank::_3, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -172,7 +172,7 @@ TEST_F(CheckerTest, InvalidTwoPairWithInvalidCards) {
 }
 
 TEST_F(CheckerTest, ValidOnePairWithValidCards) {
-	std::vector<Card> cards{ Card('A', Suit::Spaders), Card('A', Suit::Diamonds), Card('3', Suit::Clubs), Card('4', Suit::Hearts), Card('K', Suit::Diamonds) };
+	std::vector<Card> cards{ Card(Rank::A, Suit::Spaders), Card(Rank::A, Suit::Diamonds), Card(Rank::_3, Suit::Clubs), Card(Rank::_4, Suit::Hearts), Card(Rank::K, Suit::Diamonds) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -181,7 +181,7 @@ TEST_F(CheckerTest, ValidOnePairWithValidCards) {
 }
 
 TEST_F(CheckerTest, InvalidOnePairWithInvalidCards) {
-	std::vector<Card> cards{ Card('Q', Suit::Spaders), Card('2', Suit::Diamonds), Card('3', Suit::Clubs), Card('K', Suit::Hearts), Card('A', Suit::Spaders) };
+	std::vector<Card> cards{ Card(Rank::Q, Suit::Spaders), Card(Rank::_2, Suit::Diamonds), Card(Rank::_3, Suit::Clubs), Card(Rank::K, Suit::Hearts), Card(Rank::A, Suit::Spaders) };
 
 	for (const auto& c : cards) {
 		checker.update(c);
@@ -191,8 +191,8 @@ TEST_F(CheckerTest, InvalidOnePairWithInvalidCards) {
 
 TEST(ComparatorTest, Valid4OfKindWithValidCards) {
 	std::map<Card, int> cards {
-		{ Card('A', Suit::Clubs), 4 },
-		{ Card('K', Suit::Diamonds), 1 }
+		{ Card(Rank::A, Suit::Clubs), 4 },
+		{ Card(Rank::K, Suit::Diamonds), 1 }
 	};
 
 	auto e = cards.cend();
@@ -202,8 +202,8 @@ TEST(ComparatorTest, Valid4OfKindWithValidCards) {
 
 TEST(ComparatorTest, Inalid4OfKindWithInalidCards) {
 	std::map<Card, int> cards{
-		{ Card('A', Suit::Clubs), 3 },
-		{ Card('K', Suit::Diamonds), 2 }
+		{ Card(Rank::A, Suit::Clubs), 3 },
+		{ Card(Rank::K, Suit::Diamonds), 2 }
 	};
 
 	auto e = cards.cend();
@@ -213,8 +213,8 @@ TEST(ComparatorTest, Inalid4OfKindWithInalidCards) {
 
 TEST(ComparatorTest, ValidTripletWithValidCards) {
 	std::map<Card, int> cards{
-		{ Card('A', Suit::Clubs), 3 },
-		{ Card('K', Suit::Diamonds), 2 }
+		{ Card(Rank::A, Suit::Clubs), 3 },
+		{ Card(Rank::K, Suit::Diamonds), 2 }
 	};
 
 	auto e = cards.cend();
@@ -224,9 +224,9 @@ TEST(ComparatorTest, ValidTripletWithValidCards) {
 
 TEST(ComparatorTest, InalidTripletWithInalidCards) {
 	std::map<Card, int> cards{
-		{ Card('A', Suit::Clubs), 2 },
-		{ Card('Q', Suit::Hearts), 2 },
-		{ Card('K', Suit::Diamonds), 1 }
+		{ Card(Rank::A, Suit::Clubs), 2 },
+		{ Card(Rank::Q, Suit::Hearts), 2 },
+		{ Card(Rank::K, Suit::Diamonds), 1 }
 	};
 
 	auto e = cards.cend();
@@ -236,9 +236,9 @@ TEST(ComparatorTest, InalidTripletWithInalidCards) {
 
 TEST(ComparatorTest, ValidPairWithValidCards) {
 	std::map<Card, int> cards{
-		{ Card('A', Suit::Clubs), 2 },
-		{ Card('Q', Suit::Hearts), 2 },
-		{ Card('K', Suit::Diamonds), 1 }
+		{ Card(Rank::A, Suit::Clubs), 2 },
+		{ Card(Rank::Q, Suit::Hearts), 2 },
+		{ Card(Rank::K, Suit::Diamonds), 1 }
 	};
 
 	auto e = cards.cend();
@@ -248,11 +248,11 @@ TEST(ComparatorTest, ValidPairWithValidCards) {
 
 TEST(ComparatorTest, InalidPairWithInalidCards) {
 	std::map<Card, int> cards{
-		{ Card('2', Suit::Clubs), 1 },
-		{ Card('Q', Suit::Hearts), 1 },
-		{ Card('T', Suit::Hearts), 1 },
-		{ Card('3', Suit::Hearts), 1 },
-		{ Card('A', Suit::Diamonds), 1 }
+		{ Card(Rank::_2, Suit::Clubs), 1 },
+		{ Card(Rank::Q, Suit::Hearts), 1 },
+		{ Card(Rank::T, Suit::Hearts), 1 },
+		{ Card(Rank::_3, Suit::Hearts), 1 },
+		{ Card(Rank::A, Suit::Diamonds), 1 }
 	};
 
 	auto e = cards.cend();

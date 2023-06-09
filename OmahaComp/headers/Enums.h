@@ -1,6 +1,24 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+enum class Rank {
+	None,
+	LA,
+	_2,
+	_3,
+	_4,
+	_5,
+	_6,
+	_7,
+	_8,
+	_9,
+	T,
+	J,
+	Q,
+	K,
+	A
+};
+
 enum class Suit {
 	None,
 	Diamonds,
@@ -22,13 +40,8 @@ enum class HighHand {
 	StraightFlush
 };
 
-enum class CardConst {
-	HIGH_HAND_ACE = 14,
-	LOW_HAND_ACE = 1,
-	LOW_HAND_MAX_RANK = 8,
-	LOW_HAND_SIZE = 5,
-	HIGH_HAND_SIZE = 5,
-	HAND_SIZE = 4,
+enum CardConst {
+	HILO_HAND_SIZE = 5,
 	PAIR_FROM_HAND = 2,
 	THREE_FROM_BOARD = 3
 };

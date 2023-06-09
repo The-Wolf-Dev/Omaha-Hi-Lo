@@ -19,6 +19,35 @@ Suit parseSuit(const char suit) {
 	}
 }
 
+Rank parseRank(const char rank) {
+	switch (rank)
+	{
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+		return static_cast<Rank>(rank - '0');
+	case 'T':
+		return Rank::T;
+	case 'J':
+		return Rank::J;
+	case 'Q':
+		return Rank::Q;
+	case 'K':
+		return Rank::K;
+	case 'A':
+		return Rank::A;
+	case 'L':
+		return Rank::LA;
+	default:
+		return Rank::None;
+	}
+}
+
 std::string highHandRankToString(const HighHand suit) {
 	switch (suit)
 	{
@@ -36,32 +65,31 @@ std::string highHandRankToString(const HighHand suit) {
 	}
 }
 
-int parseWeight(const char rank) {
+char cardRankToChar(const Rank rank) {
 	switch (rank)
 	{
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-		return rank - '0';
-	case 'T':
-		return 10;
-	case 'J':
-		return 11;
-	case 'Q':
-		return 12;
-	case 'K':
-		return 13;
-	case 'A':
-		return 14;
-	case 'L':
-		return 1;
+	case Rank::_2:
+	case Rank::_3:
+	case Rank::_4:
+	case Rank::_5:
+	case Rank::_6:
+	case Rank::_7:
+	case Rank::_8:
+	case Rank::_9:
+		return (int)rank + '0';
+	case Rank::T:
+		return 'T';
+	case Rank::J:
+		return 'J';
+	case Rank::Q:
+		return 'Q';
+	case Rank::K:
+		return 'K';
+	case Rank::A:
+	case Rank::LA:
+		return 'A';
 	default:
-		return 0;
+		return '0';
 	}
 }
 
@@ -71,8 +99,8 @@ void removeDuplicates(std::vector<Card>& vec) {
 	vec.erase(last, vec.end());
 }
 
-void changeAceWeight(std::vector<Card>::iterator& It) {
-	(*It).setWeight((int)CardConst::LOW_HAND_ACE);
+void makeLowAce(std::vector<Card>::iterator& It) {
+	(*It).makeLowAce();
 }
 
 bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs) {
@@ -82,17 +110,17 @@ bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs) {
 }
 
 std::vector<Card>::iterator findHighAce(std::vector<Card>& vec) {
-	return std::find(vec.begin(), vec.end(), (int)CardConst::HIGH_HAND_ACE);
+	return std::find(vec.begin(), vec.end(), Rank::A);
 }
 
 std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec) {
 	return std::find_if(vec.cbegin(), vec.cend(),
-		[](const Card& card) { return card > (int)CardConst::LOW_HAND_MAX_RANK; }); //std::greater<Card>((int)CardConst::LOW_HAND_MAX_RANK, std::placeholders::_1)
+		[](const Card& card) { return card > Rank::_8; }); //std::greater<Card>(Rank::_8, std::placeholders::_1)
 }
 
 void handleExceptionalStraightFlush(std::vector<Card>& highHandCards) {
 	if (!highHandCards.empty()
-		&& highHandCards[0].getRank() == 'A' && highHandCards[1].getRank() == '5') {
-		highHandCards[0].setWeight(1);
+		&& highHandCards[0].getRank() == Rank::A && highHandCards[1].getRank() == Rank::_5) {
+		highHandCards[0].makeLowAce();
 	}
 }

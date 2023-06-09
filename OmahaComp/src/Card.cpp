@@ -1,11 +1,10 @@
 #include <Card.h>
 #include <Tools.h>
 
-Card::Card(char rank, Suit suit) : m_rank{ rank }, m_suit{ suit }, m_weight{ 0 } {
-	m_weight = parseWeight(rank);
+Card::Card(Rank rank, Suit suit) : m_rank{ rank }, m_suit{ suit } {
 }
 
-char Card::getRank() const {
+Rank Card::getRank() const {
 	return m_rank;
 }
 
@@ -13,37 +12,34 @@ Suit Card::getSuit() const {
 	return m_suit;
 }
 
-int Card::getWeight() const {
-	return m_weight;
-}
-
-void Card::setWeight(int weight) {
-	m_weight = weight;
+void Card::makeLowAce() {
+	if(m_rank == Rank::A)
+		m_rank = Rank::LA;
 }
 
 bool operator<(const Card& lhs, const Card& rhs)
 {
-	return lhs.m_weight < rhs.m_weight;
+	return lhs.m_rank < rhs.m_rank;
 }
 
 bool operator>(const Card& lhs, const Card& rhs)
 {
-	return lhs.m_weight > rhs.m_weight;
+	return lhs.m_rank > rhs.m_rank;
 }
 
-bool operator>(const Card& lhs, const int& rhs)
+bool operator>(const Card& lhs, const Rank& rhs)
 {
-	return lhs.m_weight > rhs;
+	return lhs.m_rank > rhs;
 }
 
 bool operator==(const Card& lhs, const Card& rhs)
 {
-	return lhs.m_weight == rhs.m_weight;
+	return lhs.m_rank == rhs.m_rank;
 }
 
-bool operator==(const Card& lhs, const int& rhs)
+bool operator==(const Card& lhs, const Rank& rhs)
 {
-	return lhs.m_weight == rhs;
+	return lhs.m_rank == rhs;
 }
 
 bool operator!=(const Card& lhs, const Card& rhs)
@@ -52,15 +48,15 @@ bool operator!=(const Card& lhs, const Card& rhs)
 }
 
 int operator+(const Card& lhs, const Card& rhs) {
-	return lhs.getWeight() + rhs.getWeight();
+	return (int)lhs.m_rank + (int)rhs.m_rank;
 }
 
 int operator+(const int lhs, const Card& rhs) {
-	return lhs + rhs.getWeight();
+	return lhs + (int)rhs.m_rank;
 }
 
 std::ostream& operator<<(std::ostream& os, const Card& card)
 {
-	os << card.m_rank;
+	os << cardRankToChar(card.m_rank);
 	return os;
 }

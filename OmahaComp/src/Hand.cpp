@@ -10,7 +10,7 @@ Hand::Hand(std::string handSetup)
 	for (size_t i{ 0U }, end{ handSetup.length() }; i < end; ++i)
 	{
 		if (i % 3 == 0) {
-			m_cards.emplace_back(handSetup[i], parseSuit(handSetup[i + 1U]));
+			m_cards.emplace_back(parseRank(handSetup[i]), parseSuit(handSetup[i + 1U]));
 		}
 	}
 	std::sort(m_cards.begin(), m_cards.end(), std::greater<Card>());
@@ -37,9 +37,9 @@ void Hand::findHiLoHand(const Board& board) {
 	HighHand highHandRank = HighHand::None;
 	std::vector<Card> cards, twoCards, threeCards;
 
-	Combinations<Card> handComb(m_cards, (int)CardConst::PAIR_FROM_HAND), boardComb(boardCards, (int)CardConst::THREE_FROM_BOARD);
+	Combinations<Card> handComb(m_cards, PAIR_FROM_HAND), boardComb(boardCards, THREE_FROM_BOARD);
 
-	cards.reserve((int)CardConst::HIGH_HAND_SIZE);
+	cards.reserve(HILO_HAND_SIZE);
 	while (handComb.generateCombination(twoCards))
 	{
 		while (boardComb.generateCombination(threeCards)) {
@@ -56,11 +56,11 @@ void Hand::findHiLoHand(const Board& board) {
 }
 
 void Hand::checkLowHandCards(std::vector<Card>& cards) {
-	int uniqueCardsCount = std::unique(cards.begin(), cards.end()) - cards.begin();
-	if (uniqueCardsCount < 5) return;
+	auto uniqueCardsCount = std::unique(cards.begin(), cards.end()) - cards.begin();
+	if (uniqueCardsCount < HILO_HAND_SIZE) return;
 
 	auto aceCard = findHighAce(cards);
-	if (aceCard != cards.end()) changeAceWeight(aceCard);
+	if (aceCard != cards.end()) makeLowAce(aceCard);
 	std::sort(cards.begin(), cards.end());
 
 	auto notSuitableCard = findNotSuitableCard(cards);
