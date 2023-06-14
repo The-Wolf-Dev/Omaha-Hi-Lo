@@ -6,7 +6,7 @@
 #include <Tools.h>
 
 Hand::Hand(std::string handSetup) 
-	: m_maxHighHandRank{ HighHand::None }, m_hasLowHand{ false } {
+	: m_maxHighHandRank{ HighHandRank::None }, m_hasLowHand{ false } {
 	for (size_t i{ 0U }, end{ handSetup.length() }; i < end; ++i)
 	{
 		if (i % 3 == 0) {
@@ -16,7 +16,7 @@ Hand::Hand(std::string handSetup)
 	std::sort(m_cards.begin(), m_cards.end(), std::greater<Card>());
 }
 
-HighHand Hand::getHighHandRank() const {
+HighHandRank Hand::getHighHandRank() const {
 	return m_maxHighHandRank;
 }
 
@@ -34,7 +34,7 @@ std::vector<Card> Hand::getLowHandCards() const {
 
 void Hand::findHiLoHand(const Board& board) {
 	const auto boardCards = board.getCards();
-	HighHand highHandRank = HighHand::None;
+	HighHandRank highHandRank = HighHandRank::None;
 	std::vector<Card> cards, twoCards, threeCards;
 
 	Combinations<Card> handComb(m_cards, PAIR_FROM_HAND), boardComb(boardCards, THREE_FROM_BOARD);
@@ -73,7 +73,7 @@ void Hand::checkLowHandCards(std::vector<Card>& cards) {
 	}
 }
 
-HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
+HighHandRank Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 	std::sort(highHandCards.begin(), highHandCards.end(), std::greater<Card>());
 	Checker checker;
 
@@ -83,36 +83,36 @@ HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
 
 	if (checker.isStraightFlush()) {
 		handleExceptionalStraightFlush(highHandCards);
-		return HighHand::StraightFlush;
+		return HighHandRank::StraightFlush;
 	} 
 	else if (checker.is4OfAKind()) {
-		return HighHand::FourOfAKind;
+		return HighHandRank::FourOfAKind;
 	}
 	else if (checker.isFullHouse()) {
-		return HighHand::FullHouse;
+		return HighHandRank::FullHouse;
 	}
 	else if (checker.isFlush()) {
-		return HighHand::Flush;
+		return HighHandRank::Flush;
 	}
 	else if (checker.isStraight()) {
 		handleExceptionalStraightFlush(highHandCards);
-		return HighHand::Straight;
+		return HighHandRank::Straight;
 	}
 	else if (checker.is3OfAKind()) {
-		return HighHand::ThreeOfAKind;
+		return HighHandRank::ThreeOfAKind;
 	}
 	else if (checker.isTwoPair()) {
-		return HighHand::TwoPair;
+		return HighHandRank::TwoPair;
 	}
 	else if (checker.isOnePair()) {
-		return HighHand::OnePair;
+		return HighHandRank::OnePair;
 	}
 	else {
-		return HighHand::HighCard;
+		return HighHandRank::HighCard;
 	}
 }
 
-void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
+void Hand::checkHighHandRank(const HighHandRank& highHandRank, const std::vector<Card>& highHandCards) {
 	if (m_maxHighHandRank < highHandRank) {
 		m_maxHighHandRank = highHandRank;
 		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());

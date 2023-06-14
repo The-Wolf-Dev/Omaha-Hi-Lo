@@ -48,18 +48,18 @@ Rank parseRank(const char rank) {
 	}
 }
 
-std::string highHandRankToString(const HighHand suit) {
+std::string highHandRankToString(const HighHandRank suit) {
 	switch (suit)
 	{
-	case HighHand::StraightFlush: return "Straight Flush";
-	case HighHand::FourOfAKind: return "4-of-a-Kind";
-	case HighHand::FullHouse: return "Full House";
-	case HighHand::Flush: return "Flush";
-	case HighHand::Straight: return "Straight";
-	case HighHand::ThreeOfAKind: return "3-of-a-Kind";
-	case HighHand::TwoPair: return "Two Pair";
-	case HighHand::OnePair: return "One Pair";
-	case HighHand::HighCard: return "High Card";
+	case HighHandRank::StraightFlush: return "Straight Flush";
+	case HighHandRank::FourOfAKind: return "4-of-a-Kind";
+	case HighHandRank::FullHouse: return "Full House";
+	case HighHandRank::Flush: return "Flush";
+	case HighHandRank::Straight: return "Straight";
+	case HighHandRank::ThreeOfAKind: return "3-of-a-Kind";
+	case HighHandRank::TwoPair: return "Two Pair";
+	case HighHandRank::OnePair: return "One Pair";
+	case HighHandRank::HighCard: return "High Card";
 	default:
 		return "Unknown HighHand";
 	}

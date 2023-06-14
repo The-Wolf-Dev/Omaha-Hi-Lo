@@ -190,72 +190,25 @@ TEST_F(CheckerTest, InvalidOnePairWithInvalidCards) {
 }
 
 TEST(ComparatorTest, Valid4OfKindWithValidCards) {
-	std::map<Card, int> cards {
-		{ Card(Rank::A, Suit::Clubs), 4 },
-		{ Card(Rank::K, Suit::Diamonds), 1 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::fourOfKind);
-	EXPECT_THAT(e != result, IsTrue());
+	EXPECT_THAT(compr::fourOfKind({ Card(Rank::A, Suit::Clubs), 4 }), IsTrue());
 }
 
-TEST(ComparatorTest, Inalid4OfKindWithInalidCards) {
-	std::map<Card, int> cards{
-		{ Card(Rank::A, Suit::Clubs), 3 },
-		{ Card(Rank::K, Suit::Diamonds), 2 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::fourOfKind);
-	EXPECT_THAT(e != result, IsFalse());
+TEST(ComparatorTest, Invalid4OfKindWithInvalidCards) {
+	EXPECT_THAT(compr::fourOfKind({ Card(Rank::A, Suit::Clubs), 3 }), IsFalse());
 }
 
 TEST(ComparatorTest, ValidTripletWithValidCards) {
-	std::map<Card, int> cards{
-		{ Card(Rank::A, Suit::Clubs), 3 },
-		{ Card(Rank::K, Suit::Diamonds), 2 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::triplet);
-	EXPECT_THAT(e != result, IsTrue());
+	EXPECT_THAT(compr::triplet({ Card(Rank::A, Suit::Clubs), 3 }), IsTrue());
 }
 
-TEST(ComparatorTest, InalidTripletWithInalidCards) {
-	std::map<Card, int> cards{
-		{ Card(Rank::A, Suit::Clubs), 2 },
-		{ Card(Rank::Q, Suit::Hearts), 2 },
-		{ Card(Rank::K, Suit::Diamonds), 1 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::triplet);
-	EXPECT_THAT(e != result, IsFalse());
+TEST(ComparatorTest, InvalidTripletWithInvalidCards) {
+	EXPECT_THAT(compr::triplet({ Card(Rank::A, Suit::Clubs), 2 }), IsFalse());
 }
 
 TEST(ComparatorTest, ValidPairWithValidCards) {
-	std::map<Card, int> cards{
-		{ Card(Rank::A, Suit::Clubs), 2 },
-		{ Card(Rank::Q, Suit::Hearts), 2 },
-		{ Card(Rank::K, Suit::Diamonds), 1 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::pair);
-	EXPECT_THAT(e != result, IsTrue());
+	EXPECT_THAT(compr::pair({ Card(Rank::Q, Suit::Hearts), 2 }), IsTrue());
 }
 
-TEST(ComparatorTest, InalidPairWithInalidCards) {
-	std::map<Card, int> cards{
-		{ Card(Rank::_2, Suit::Clubs), 1 },
-		{ Card(Rank::Q, Suit::Hearts), 1 },
-		{ Card(Rank::T, Suit::Hearts), 1 },
-		{ Card(Rank::_3, Suit::Hearts), 1 },
-		{ Card(Rank::A, Suit::Diamonds), 1 }
-	};
-
-	auto e = cards.cend();
-	auto result = std::find_if(cards.cbegin(), e, compr::pair);
-	EXPECT_THAT(e != result, IsFalse());
+TEST(ComparatorTest, InvalidPairWithInvalidCards) {
+	EXPECT_THAT(compr::pair({ Card(Rank::_2, Suit::Clubs), 1 }), IsFalse());
 }

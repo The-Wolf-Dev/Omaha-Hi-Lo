@@ -9,7 +9,7 @@
 Suit parseSuit(const char suit);
 Rank parseRank(const char rank);
 
-std::string highHandRankToString(const HighHand suit);
+std::string highHandRankToString(const HighHandRank suit);
 char cardRankToChar(const Rank rank);
 
 void removeDuplicates(std::vector<Card>& vec);

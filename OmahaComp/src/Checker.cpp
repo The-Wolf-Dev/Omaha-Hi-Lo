@@ -64,30 +64,12 @@ bool Checker::is4OfAKind() const {
 	if (cards.size() != 2) return false;
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::fourOfKind);
-#if 0
-	return false;
-
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 4 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
 }
 
 bool Checker::isFullHouse() const {
 	if (cards.size() != 2) return false;
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::triplet);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 3 && cardsCount != 2) return false;
-	}
-
-	return true;
-#endif
 }
 
 bool Checker::is3OfAKind() const {
@@ -95,14 +77,6 @@ bool Checker::is3OfAKind() const {
 
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::triplet);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 3 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
 }
 
 bool Checker::isTwoPair() const {
@@ -113,14 +87,6 @@ bool Checker::isTwoPair() const {
 	if (firstPair != e)
 		return e != std::find_if(++firstPair, e, compr::pair);
 	else return false;
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 2 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
 }
 
 bool Checker::isOnePair() const {
@@ -128,12 +94,4 @@ bool Checker::isOnePair() const {
 
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::pair);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 2 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
 }
