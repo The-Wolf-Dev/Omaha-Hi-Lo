@@ -9,14 +9,14 @@ template<typename T>
 class Combinations
 {
     std::vector<bool> m_mask;
-    std::vector<T> m_source;
-    size_t m_size;
-    unsigned m_callsCount, m_elemCount;
+    const std::vector<T> &m_source;
+    const size_t m_size;
+    size_t m_callsCount;
 public:
-    Combinations(const std::vector<T>& source, unsigned elemCount)
-        : m_source{ source }, m_elemCount{ elemCount }, m_size{ source.size() },
+    Combinations(const std::vector<T>& source, size_t elemCount)
+        : m_source{ source }, m_size{ source.size() },
         m_mask(source.size()), m_callsCount{} {
-        std::fill(m_mask.begin(), m_mask.begin() + m_elemCount, true);
+        std::fill(m_mask.begin(), m_mask.begin() + elemCount, true);
     };
     bool generateCombination(std::vector<T>& result);
 };

@@ -12,7 +12,7 @@ Suit Card::getSuit() const {
 	return m_suit;
 }
 
-void Card::makeLowAce() {
+void Card::makeLowAce() const {
 	if(m_rank == Rank::A)
 		m_rank = Rank::LA;
 }

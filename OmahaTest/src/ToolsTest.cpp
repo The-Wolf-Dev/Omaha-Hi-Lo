@@ -5,19 +5,19 @@
 
 using namespace testing;
 
-class ParseWeightFixture : //public CardTest, // it will generate an error
+class ParseWeightFixture :
 	public TestWithParam<std::tuple<char, Rank>>
 {
 };
 
-class ParseSuitFixture : //public CardTest, // it will generate an error
+class ParseSuitFixture :
 	public TestWithParam<std::tuple<char, Suit>>
 {
 };
 
-// This test uses tuple which contain rank as first value
-// and weight of corresponding rank as second value.
-// First value is put in the testCardQd.parseWeight(),
+// This test uses tuple which contain char rank as first value
+// and corresponding enum rank value as second value.
+// First value is put in the parseRank(),
 // so it is expected to return the second value.
 TEST_P(ParseWeightFixture, ParseRankTest) {
 	auto param = GetParam();
@@ -42,7 +42,7 @@ INSTANTIATE_TEST_SUITE_P(CardTest, ParseWeightFixture, Values(
 
 // This test uses tuple which contain char suit as first value
 // and corresponding enum Suit value as second value.
-// First value is put in the testCardQd.parseSuit(),
+// First value is put in the parseSuit(),
 // so it is expected to return the second value.
 TEST_P(ParseSuitFixture, ParseSuitTest) {
 	auto param = GetParam();

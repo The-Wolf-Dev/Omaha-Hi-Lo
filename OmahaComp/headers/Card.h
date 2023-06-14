@@ -6,14 +6,14 @@
 #include <Enums.h>
 
 class Card {
-	Rank m_rank;
+	mutable Rank m_rank;
 	Suit m_suit;
 public:
 	Card(Rank m_rank, Suit m_suit);
 
 	Rank getRank() const;
 	Suit getSuit() const;
-	void makeLowAce();
+	void makeLowAce() const;
 
 	friend bool operator<(const Card&, const Card&);
 	friend bool operator>(const Card&, const Card&);

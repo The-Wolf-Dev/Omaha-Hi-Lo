@@ -12,7 +12,6 @@ Board::Board(std::string boardSetup) {
 			m_cards.emplace_back(parseRank(boardSetup[i]), parseSuit(boardSetup[i + 1U]));
 		}
 	}
-	std::sort(m_cards.begin(), m_cards.end(), std::greater<Card>());
 }
 
 std::vector<Card> Board::getCards() const {

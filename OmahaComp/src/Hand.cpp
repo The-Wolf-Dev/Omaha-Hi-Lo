@@ -6,36 +6,28 @@
 #include <Tools.h>
 
 Hand::Hand(std::string handSetup) 
-	: m_maxHighHandRank{ HighHand::None }, m_hasLowHand{ false } {
+	: m_hasLowHand{ false } {
 	for (size_t i{ 0U }, end{ handSetup.length() }; i < end; ++i)
 	{
 		if (i % 3 == 0) {
 			m_cards.emplace_back(parseRank(handSetup[i]), parseSuit(handSetup[i + 1U]));
 		}
 	}
-	std::sort(m_cards.begin(), m_cards.end(), std::greater<Card>());
 }
 
-HighHand Hand::getHighHandRank() const {
-	return m_maxHighHandRank;
+HighHand Hand::getHighHand() const {
+	return highHand;
 }
 
-std::vector<Card> Hand::getHighHandCards() const {
-	return m_maxHighHandCards;
-}
-
-bool Hand::hasLowHand() const {
-	return m_hasLowHand;
-}
-
-std::vector<Card> Hand::getLowHandCards() const {
+std::vector<Card> Hand::getLowHand() const {
 	return m_lowHandCards;
 }
 
 void Hand::findHiLoHand(const Board& board) {
 	const auto boardCards = board.getCards();
-	HighHand highHandRank = HighHand::None;
+	HighHandRank highHandRank = HighHandRank::None;
 	std::vector<Card> cards, twoCards, threeCards;
+	Checker checker;
 
 	Combinations<Card> handComb(m_cards, PAIR_FROM_HAND), boardComb(boardCards, THREE_FROM_BOARD);
 
@@ -43,16 +35,19 @@ void Hand::findHiLoHand(const Board& board) {
 	while (handComb.generateCombination(twoCards))
 	{
 		while (boardComb.generateCombination(threeCards)) {
-			cards.insert(cards.end(), twoCards.begin(), twoCards.end());
+			cards.assign(twoCards.begin(), twoCards.end());
 			cards.insert(cards.end(), threeCards.begin(), threeCards.end());
-
-			highHandRank = checkHighHandCards(cards);
-			checkHighHandRank(highHandRank, cards);
-			checkLowHandCards(cards);
+			
+			//highHandRank = checkHighHandCards(cards);
+			//checkHighHandRank(highHandRank, cards);
+			//checkLowHandCards(cards);
+			std::sort(cards.begin(), cards.end(), std::greater<Card>());
+			checker.validate(cards);
 
 			cards.clear();
 		}
 	}
+	highHand = checker.getHighHand();
 }
 
 void Hand::checkLowHandCards(std::vector<Card>& cards) {
@@ -66,58 +61,26 @@ void Hand::checkLowHandCards(std::vector<Card>& cards) {
 	auto notSuitableCard = findNotSuitableCard(cards);
 	if (notSuitableCard != cards.cend()) return;
 
-	if (cards < m_lowHandCards || m_lowHandCards.empty()) {
+	if (m_lowHandCards.empty() || cards < m_lowHandCards) {
 		m_lowHandCards.assign(cards.begin(), cards.end());
 		std::reverse(m_lowHandCards.begin(), m_lowHandCards.end());
 		m_hasLowHand = true;
 	}
 }
 
-HighHand Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
-	std::sort(highHandCards.begin(), highHandCards.end(), std::greater<Card>());
-	Checker checker;
+//HighHandRank Hand::checkHighHandCards(std::vector<Card>& highHandCards) {
+//	std::sort(highHandCards.begin(), highHandCards.end(), std::greater<Card>());
+//	Checker checker;
+//	
+//	checker.validate(highHandCards);
+//}
 
-	for (const auto& c : highHandCards) {
-		checker.update(c);
-	}
-
-	if (checker.isStraightFlush()) {
-		handleExceptionalStraightFlush(highHandCards);
-		return HighHand::StraightFlush;
-	} 
-	else if (checker.is4OfAKind()) {
-		return HighHand::FourOfAKind;
-	}
-	else if (checker.isFullHouse()) {
-		return HighHand::FullHouse;
-	}
-	else if (checker.isFlush()) {
-		return HighHand::Flush;
-	}
-	else if (checker.isStraight()) {
-		handleExceptionalStraightFlush(highHandCards);
-		return HighHand::Straight;
-	}
-	else if (checker.is3OfAKind()) {
-		return HighHand::ThreeOfAKind;
-	}
-	else if (checker.isTwoPair()) {
-		return HighHand::TwoPair;
-	}
-	else if (checker.isOnePair()) {
-		return HighHand::OnePair;
-	}
-	else {
-		return HighHand::HighCard;
-	}
-}
-
-void Hand::checkHighHandRank(const HighHand& highHandRank, const std::vector<Card>& highHandCards) {
-	if (m_maxHighHandRank < highHandRank) {
-		m_maxHighHandRank = highHandRank;
-		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
-	}
-	else if (m_maxHighHandRank == highHandRank && m_maxHighHandCards < highHandCards) {
-		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
-	}
-}
+//void Hand::checkHighHandRank(const HighHandRank& highHandRank, const std::vector<Card>& highHandCards) {
+//	if (m_maxHighHandRank < highHandRank) {
+//		m_maxHighHandRank = highHandRank;
+//		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
+//	}
+//	else if (m_maxHighHandRank == highHandRank && m_maxHighHandCards < highHandCards) {
+//		m_maxHighHandCards.assign(highHandCards.begin(), highHandCards.end());
+//	}
+//}

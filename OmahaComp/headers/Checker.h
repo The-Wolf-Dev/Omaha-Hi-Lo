@@ -6,22 +6,24 @@
 
 class Card;
 enum class Suit;
+enum class HighHandRank;
+
+class HighHand {
+	friend class Checker;
+	std::vector<Card> cards;
+	HighHandRank rank;
+public:
+	std::vector<Card> getCards() const;
+	HighHandRank getRank() const;
+	friend bool operator<(const HighHand& lhs, const HighHand& rhs);
+};
 
 class Checker {
-	class StraightFlushChecker {
-		std::map<Card, size_t> cards;
-		std::unordered_set<Suit> suits;
-	public:
-		bool isStraight() const;
-		bool isFlush() const;
-		bool isStraightFlush() const;
-
-		void update(const Card& card);
-	} sfchecker;
-	std::map<Card, size_t> cards;
-
+	std::map<Rank, size_t> cards;
+	std::unordered_set<Suit> suits;
+	HighHand highHand;
 public:
-	typedef std::map<Card, size_t>::value_type c2s_t;
+	typedef std::map<Rank, size_t>::value_type c2s_t;
 	bool isStraight() const;
 	bool isFlush() const;
 	bool isStraightFlush() const;
@@ -31,7 +33,9 @@ public:
 	bool isTwoPair() const;
 	bool isOnePair() const;
 
-	void update(const Card& card);
+	void validate(const std::vector<Card>& card);
+	HighHand getHighHand() const;
+	void compareHighHands(const HighHand& highHand);
 };
 
 namespace compr {

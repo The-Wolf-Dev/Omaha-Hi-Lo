@@ -65,9 +65,9 @@ TEST_F(CardTest, MakeLowAceTest) {
 	EXPECT_THAT(testCardAs.getRank(), Eq(Rank::LA));
 }
 
-// operator< compares the weights of two cards.
+// operator< compares the ranks of two cards.
 // testCardQd object consrtructed in fixture with value of m_rank = Rank::Q,
-// so three cases of weight comparison will be considered:
+// so three cases of rank comparison will be considered:
 // 1) 12 (Q) < 2 (2)
 // 2) 12 (Q) < 13 (K)
 // 3) 12 (Q) < 12 (Q)
@@ -77,9 +77,9 @@ TEST_F(CardTest, OperatorLessThanTest) {
 	EXPECT_FALSE(testCardQd < Card(Rank::Q, Suit::Diamonds));
 }
 
-// operator> compares the weights of two cards or card and integer.
+// operator> compares the ranks of two cards or card and integer.
 // testCardQd object consrtructed in fixture with value of m_rank = Rank::Q,
-// so six cases of weight comparison will be considered:
+// so six cases of rank comparison will be considered:
 // 1) 12 (Q) > 2 (2)
 // 2) 12 (Q) > 13 (K)
 // 3) 12 (Q) > 12 (Q)
@@ -96,9 +96,9 @@ TEST_F(CardTest, OperatorGreaterThanTest) {
 	EXPECT_FALSE(testCardQd > Rank::Q);
 }
 
-// operator== compares the weights of two cards or card and integer.
+// operator== compares the ranks of two cards or card and integer.
 // testCardQd object consrtructed in fixture with value of m_rank = Rank::Q,
-// so four cases of weight comparison will be considered:
+// so four cases of rank comparison will be considered:
 // 1) 12 (Q) == 12 (Q)
 // 2) 12 (Q) == 13 (K)
 // 3) 12 (Q) == 12
@@ -111,9 +111,9 @@ TEST_F(CardTest, OperatorEqualTest) {
 	EXPECT_FALSE(testCardQd == Rank::K);
 }
 
-// operator!= compares the weights of two cards.
+// operator!= compares the ranks of two cards.
 // testCardQd object consrtructed in fixture with value of m_rank = Rank::Q,
-// so two cases of weight comparison will be considered:
+// so two cases of rank comparison will be considered:
 // 1) 12 (Q) != 12 (Q)
 // 2) 12 (Q) != 13 (K)
 TEST_F(CardTest, OperatorNotEqualTest) {

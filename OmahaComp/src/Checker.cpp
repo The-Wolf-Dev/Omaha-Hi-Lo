@@ -3,106 +3,132 @@
 #include <Card.h>
 #include <Checker.h>
 
+std::vector<Card> HighHand::getCards() const {
+	return cards;
+}
+
+HighHandRank HighHand::getRank() const {
+	return rank;
+}
+
+bool operator<(const HighHand& lhs, const HighHand& rhs) {
+	return lhs.rank < rhs.rank;
+}
+
 bool compr::fourOfKind(Checker::c2s_t const& p) { return p.second == 4; }
 bool compr::triplet(Checker::c2s_t const& p) { return p.second == 3; }
 bool compr::pair(Checker::c2s_t const& p) { return p.second == 2; }
 
-void Checker::StraightFlushChecker::update(const Card& card) {
-	if (card.getRank() == Rank::A) cards[Card(Rank::LA, card.getSuit())];
-	cards[card]++;
-
-	suits.insert(card.getSuit());
-}
-
-bool Checker::StraightFlushChecker::isStraight() const {
-	if (cards.empty() || cards.size() < 5) return false;
-
-	auto cur{ cards.cbegin() }, next{ cur };
-	++next;
-
-	if (cur->first.getRank() == Rank::LA && next->first.getRank() != Rank::_2) {
-		cur = next;
-		++next;
+void Checker::validate(const std::vector<Card>& cards) {
+	for (const auto& c : cards) {
+		this->cards[c.getRank()]++;
+		suits.insert(c.getSuit());
 	}
 
-	size_t i = 0;
-	for (auto e = cards.cend(); next != e && i < 4; ++cur, ++next, ++i) {
-		Card ccard = cur->first, ncard = next->first;
-		if ((int)ccard.getRank() != (int)ncard.getRank() - 1)
-			return false;
+	//HighHand _highHand;
+	//if (isStraightFlush()) {
+	//	_highHand.rank = HighHandRank::StraightFlush;
+	//}
+	//else if (is4OfAKind()) {
+	//	_highHand.rank = HighHandRank::FourOfAKind;
+	//}
+	//else if (isFullHouse()) {
+	//	_highHand.rank = HighHandRank::FullHouse;
+	//}
+	//else if (isFlush()) {
+	//	_highHand.rank = HighHandRank::Flush;
+	//}
+	//else if (isStraight()) {
+	//	_highHand.rank = HighHandRank::Straight;
+	//}
+	//else if (is3OfAKind()) {
+	//	_highHand.rank = HighHandRank::ThreeOfAKind;
+	//}
+	//else if (isTwoPair()) {
+	//	_highHand.rank = HighHandRank::TwoPair;
+	//}
+	//else if (isOnePair()) {
+	//	_highHand.rank = HighHandRank::OnePair;
+	//}
+	//else {
+	//	_highHand.rank = HighHandRank::HighCard;
+	//}
+	//_highHand.cards = cards;
+	//compareHighHands(_highHand);
+}
+
+HighHand Checker::getHighHand() const {
+	return highHand;
+}
+
+void Checker::compareHighHands(const HighHand& highHand) {
+	if (this->highHand < highHand) {
+		this->highHand = highHand;
 	}
-	
-	return true;
-}
-
-bool Checker::StraightFlushChecker::isFlush() const {
-	return suits.size() == 1;
-}
-
-bool Checker::StraightFlushChecker::isStraightFlush() const {
-	return isStraight() && isFlush();
-}
-
-void Checker::update(const Card& card) {
-	sfchecker.update(card);
-	cards[card]++;
 }
 
 bool Checker::isStraight() const {
-	return sfchecker.isStraight();
-}
+	if (cards.empty() || cards.size() < 5) return false; // in straight all cards are unique, so size mustn't be <5
 
-bool Checker::isFlush() const {
-	return sfchecker.isFlush();
-}
+	auto cur{ cards.crbegin() }, next{ cur };
+	++next;
 
-bool Checker::isStraightFlush() const {
-	return sfchecker.isStraightFlush();
-}
+	if (cur->first == Rank::A && next->first == Rank::_5) {
+		return true;
+		//cur = next;
+		//++next;
+	}
 
-bool Checker::is4OfAKind() const {
-	if (cards.size() != 2) return false;
-	auto e = cards.cend();
-	return e != std::find_if(cards.cbegin(), e, compr::fourOfKind);
-#if 0
-	return false;
-
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 4 && cardsCount != 1) return false;
+	for (auto e = cards.crend(); next != e; ++cur, ++next) {
+		Rank ccard = cur->first, ncard = next->first;
+		if ((int)ccard != (int)ncard + 1)
+			return false;
 	}
 
 	return true;
-#endif
+}
+
+bool Checker::isFlush() const {
+	return suits.size() == 1;
+}
+
+bool Checker::isStraightFlush() const {
+	//bool straight = isStraight();
+	//bool flush = isFlush();
+	//HighHand _highHand;
+
+	//if (straight && flush) {
+	//	// ...
+	//}
+	//else if (straight) {
+	//	// ...
+	//} else {
+	//	// ...
+	//}
+
+	//return straight || flush;
+	return isStraight() || isFlush();
 }
 
 bool Checker::isFullHouse() const {
 	if (cards.size() != 2) return false;
+	
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::triplet);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 3 && cardsCount != 2) return false;
-	}
-
-	return true;
-#endif
 }
 
 bool Checker::is3OfAKind() const {
 	if (cards.size() != 3) return false;
-
+	
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::triplet);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 3 && cardsCount != 1) return false;
-	}
+}
 
-	return true;
-#endif
+bool Checker::is4OfAKind() const {
+	if (cards.size() != 2) return false;
+	
+	auto e = cards.cend();
+	return e != std::find_if(cards.cbegin(), e, compr::fourOfKind);
 }
 
 bool Checker::isTwoPair() const {
@@ -112,15 +138,7 @@ bool Checker::isTwoPair() const {
 	auto firstPair = std::find_if(cards.cbegin(), e, compr::pair);
 	if (firstPair != e)
 		return e != std::find_if(++firstPair, e, compr::pair);
-	else return false;
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 2 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
+	return false;
 }
 
 bool Checker::isOnePair() const {
@@ -128,12 +146,4 @@ bool Checker::isOnePair() const {
 
 	auto e = cards.cend();
 	return e != std::find_if(cards.cbegin(), e, compr::pair);
-#if 0
-	for (auto begin{ cards.cbegin() }, end{ cards.cend() }; begin != end; ++begin) {
-		size_t cardsCount = begin->second;
-		if (cardsCount != 2 && cardsCount != 1) return false;
-	}
-
-	return true;
-#endif
 }

@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(HEADER_DIR "headers")
 set(SOURCE_DIR "src")
 
-project ("Omaha-Hi-Lo")
+project("Omaha-Hi-Lo" LANGUAGES CXX)
 
 # Include sub-projects.
 add_subdirectory ("OmahaComp")

@@ -27,7 +27,7 @@ enum class Suit {
 	Spaders
 };
 
-enum class HighHand {
+enum class HighHandRank {
 	None,
 	HighCard,
 	OnePair,
