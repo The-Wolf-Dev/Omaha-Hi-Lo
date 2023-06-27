@@ -93,14 +93,21 @@ char cardRankToChar(const Rank rank) {
 	}
 }
 
-void removeDuplicates(std::vector<Card>& vec) {
-	std::sort(vec.begin(), vec.end());
-	auto last = std::unique(vec.begin(), vec.end());
-	vec.erase(last, vec.end());
+std::vector<Card> cardSetupToVector(std::string str) {
+	std::vector<Card> cards;
+	for (size_t i{ 0U }, end{ str.length() }; i < end; ++i)
+	{
+		if (i % 3 == 0) {
+			cards.emplace_back(parseRank(str[i]), parseSuit(str[i + 1U]));
+		}
+	}
+	std::sort(cards.begin(), cards.end(), std::greater<Card>());
+	return cards;
 }
 
-void makeLowAce(std::vector<Card>::iterator& It) {
-	(*It).makeLowAce();
+std::map<Rank, size_t>::const_iterator findNotSuitableCard(const std::map<Rank, size_t>& map) {
+	return std::find_if(map.cbegin(), map.cend(),
+		[](const std::pair<Rank, size_t>& card) { return card.first > Rank::_8; });
 }
 
 bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs) {
@@ -109,18 +116,52 @@ bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs) {
 	return lhsSum < rhsSum;
 }
 
-std::vector<Card>::iterator findHighAce(std::vector<Card>& vec) {
-	return std::find(vec.begin(), vec.end(), Rank::A);
-}
+bool pairComparator(std::pair<Rank, size_t>& a, std::pair<Rank, size_t>& b) { return a.second > b.second; }
 
-std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec) {
-	return std::find_if(vec.cbegin(), vec.cend(),
-		[](const Card& card) { return card > Rank::_8; }); //std::greater<Card>(Rank::_8, std::placeholders::_1)
-}
+std::vector<std::pair<Rank, size_t>> makeSortedVectorFromMap(const std::map<Rank, size_t>& map) {
+	std::vector<std::pair<Rank, size_t>> vec;
+	vec.reserve(map.size());
 
-void handleExceptionalStraightFlush(std::vector<Card>& highHandCards) {
-	if (!highHandCards.empty()
-		&& highHandCards[0].getRank() == Rank::A && highHandCards[1].getRank() == Rank::_5) {
-		highHandCards[0].makeLowAce();
+	for (auto cur{ map.crbegin() }, end{ map.crend() }; cur != end; ++cur) {
+		vec.push_back(*cur);
 	}
+
+	std::sort(vec.begin(), vec.end(), pairComparator);
+
+	return vec;
+}
+
+bool operator<(const std::map<Rank, size_t>& lhs, const std::map<Rank, size_t>& rhs) {
+	auto lhs_size{ lhs.size() }, rhs_size{ rhs.size() };
+	if (lhs_size != rhs_size) return false;
+
+	auto lhs_cards = makeSortedVectorFromMap(lhs);
+	auto rhs_cards = makeSortedVectorFromMap(rhs);
+
+	// In the loop, the first two different cards are searched to determine whether lhs < rhs
+	for (auto i{ 0ULL }; i < lhs_size; ++i) {
+		if (lhs_cards[i].first > rhs_cards[i].first) return false;
+		if (lhs_cards[i].first < rhs_cards[i].first) return true;
+	}
+
+	return false;
+}
+
+bool operator==(const std::map<Rank, size_t>& lhs, const std::map<Rank, size_t>& rhs) {
+	if (lhs.size() != rhs.size()) return false;
+
+	for (auto rhsCur{ rhs.crbegin() }, lhsCur{ lhs.crbegin() }, end{ lhs.crend() }; lhsCur != end; ++lhsCur, ++rhsCur) {
+		if (lhsCur->first != rhsCur->first || lhsCur->second != rhsCur->second) return false;
+	}
+
+	return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::map<Rank, size_t>& cards) {
+	for (auto cur{ cards.crbegin() }, end{ cards.crend() }; cur != end; ++cur) {
+		for (size_t i{ 0ULL }, end1{ cur->second }; i < end1; ++i) {
+			os << cardRankToChar(cur->first);
+		}
+	}
+	return os;
 }

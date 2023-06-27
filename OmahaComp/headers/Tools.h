@@ -2,6 +2,7 @@
 #define TOOLS_H
 
 #include <vector>
+#include <map>
 
 #include <Enums.h>
 #include <Card.h>
@@ -11,14 +12,14 @@ Rank parseRank(const char rank);
 
 std::string highHandRankToString(const HighHandRank suit);
 char cardRankToChar(const Rank rank);
+std::vector<Card> cardSetupToVector(std::string str);
 
-void removeDuplicates(std::vector<Card>& vec);
-std::vector<Card>::iterator findHighAce(std::vector<Card>& vec);
-void makeLowAce(std::vector<Card>::iterator& It);
-std::vector<Card>::const_iterator findNotSuitableCard(std::vector<Card>& vec);
+std::map<Rank, size_t>::const_iterator findNotSuitableCard(const std::map<Rank, size_t>& map);
 
 bool operator<(const std::vector<Card>& lhs, const std::vector<Card>& rhs);
 
-void handleExceptionalStraightFlush(std::vector<Card>&);
+bool operator<(const std::map<Rank, size_t> &lhs, const std::map<Rank, size_t>& rhs);
+bool operator==(const std::map<Rank, size_t>& lhs, const std::map<Rank, size_t>& rhs);
+std::ostream& operator<<(std::ostream& os, const std::map<Rank, size_t>& cards);
 
 #endif // TOOLS_H

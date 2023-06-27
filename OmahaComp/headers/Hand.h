@@ -7,26 +7,20 @@
 #include <Card.h>
 #include <Enums.h>
 #include <Board.h>
+#include <Checker.h>
 
 class Hand {
-	std::vector<Card> m_cards;
-	std::vector<Card> m_maxHighHandCards;
-	std::vector<Card> m_lowHandCards;
-	HighHandRank m_maxHighHandRank;
-	bool m_hasLowHand;
+	const std::vector<Card>& m_cards;
+	Checker m_checker;
 
-	HighHandRank checkHighHandCards(std::vector<Card>&);
-	void checkHighHandRank(const HighHandRank&, const std::vector<Card>&);
 	void checkLowHandCards(std::vector<Card>&);
 public:
-	Hand(std::string handSetup);
+	Hand(const std::vector<Card>& handSetup);
 	
 	void findHiLoHand(const Board& board);
 
-	HighHandRank getHighHandRank() const;
-	std::vector<Card> getHighHandCards() const;
-	bool hasLowHand() const;
-	std::vector<Card> getLowHandCards() const;
+	HighHand getHighHand() const;
+	LowHand getLowHand() const;
 };
 
 #endif // HAND_H

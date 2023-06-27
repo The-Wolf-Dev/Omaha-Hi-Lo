@@ -7,9 +7,9 @@
 #include <Card.h>
 
 class Board {
-	std::vector<Card> m_cards;
+	const std::vector<Card>& m_cards;
 public:
-	Board(std::string boardSetup);
+	Board(const std::vector<Card>& boardSetup);
 
 	std::vector<Card> getCards() const;
 };

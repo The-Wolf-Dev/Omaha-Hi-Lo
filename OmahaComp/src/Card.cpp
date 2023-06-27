@@ -12,11 +12,6 @@ Suit Card::getSuit() const {
 	return m_suit;
 }
 
-void Card::makeLowAce() {
-	if(m_rank == Rank::A)
-		m_rank = Rank::LA;
-}
-
 bool operator<(const Card& lhs, const Card& rhs)
 {
 	return lhs.m_rank < rhs.m_rank;
