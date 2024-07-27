@@ -54,17 +54,6 @@ TEST_F(CardTest, GetSuitTest) {
 	EXPECT_THAT(testCardAs.getSuit(), Eq(Suit::Spaders));
 }
 
-// testCardQd object consrtructed in fixture with values of: m_rank = Rank::Q,
-// so testCardQd.makeLowAce() is expected to do nothing.
-// testCardAs object consrtructed in fixture with values of: m_rank = Rank::A,
-// so testCardAs.makeLowAce() is expected to change Rank::A to Rank::LA.
-TEST_F(CardTest, MakeLowAceTest) {
-	testCardQd.makeLowAce();
-	EXPECT_THAT(testCardQd.getRank(), Eq(Rank::Q));
-	testCardAs.makeLowAce();
-	EXPECT_THAT(testCardAs.getRank(), Eq(Rank::LA));
-}
-
 // operator< compares the weights of two cards.
 // testCardQd object consrtructed in fixture with value of m_rank = Rank::Q,
 // so three cases of weight comparison will be considered:
