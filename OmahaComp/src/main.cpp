@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include <Poker.h>
-#include <IOPoker.h>
+#include <Tools.h>
 
 int main(int argc, char* argv[])
 {	
