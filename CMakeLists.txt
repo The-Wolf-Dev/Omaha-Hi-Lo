@@ -3,7 +3,13 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("omahacomp_poker")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(HEADER_DIR "headers")
+set(SOURCE_DIR "src")
+
+project ("Omaha-Hi-Lo")
 
 # Include sub-projects.
 add_subdirectory ("OmahaComp")

@@ -3,25 +3,20 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-set(SOURCE_DIR "Source Files")
-set(HEADER_DIR "Header Files")
-
-include_directories("Header Files")
-file(GLOB sources ${SOURCE_DIR}/Card.cpp
+include_directories(${HEADER_DIR})
+set(PROJECT_SOURCE_FILES ${SOURCE_DIR}/Card.cpp
 				${SOURCE_DIR}/Hand.cpp
 				${SOURCE_DIR}/Board.cpp
 				${SOURCE_DIR}/Poker.cpp
+				${SOURCE_DIR}/Checker.cpp
+				${SOURCE_DIR}/Tools.cpp
 				)
 
-add_library(OmahaCompLib STATIC ${sources})
+add_library(OmahaCompLib STATIC ${PROJECT_SOURCE_FILES})
 
 target_include_directories(OmahaCompLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${HEADER_DIR})
 
 # Add source to this project's executable.
-add_executable (OmahaComp ${SOURCE_DIR}/main.cpp
-	${HEADER_DIR}/Poker.h ${SOURCE_DIR}/Poker.cpp
-	${HEADER_DIR}/Card.h ${SOURCE_DIR}/Card.cpp
-	${HEADER_DIR}/Hand.h ${SOURCE_DIR}/Hand.cpp
-	${HEADER_DIR}/Board.h ${SOURCE_DIR}/Board.cpp
-	${HEADER_DIR}/Enums.h
-	)
+add_executable (OmahaComp ${SOURCE_DIR}/main.cpp)
+
+target_link_libraries(OmahaComp OmahaCompLib)
